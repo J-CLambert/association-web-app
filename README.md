@@ -1,4 +1,8 @@
-This project is have as goal to provide basic feature for an association web app and to practice.
+# EVENT API spesification
+
+>This project is have as goal to provide basic feature for an association web app and to practice.
+
+---
 
 #### Event class:
 - eventId - int
@@ -7,6 +11,8 @@ This project is have as goal to provide basic feature for an association web app
 - duration(minutes) - int 
 - date of creation - date
 - description - string
+
+---
 
 #### Feature:
 should have:
@@ -20,6 +26,8 @@ should have:
 must to have:
 - sorting by world in description
 - docker
+
+---
 
 ### API definition
 
@@ -54,3 +62,4 @@ I chose to use :
 - mysql as DB
 - spring boot for backend
 
+---
