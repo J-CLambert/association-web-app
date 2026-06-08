@@ -63,3 +63,13 @@ I chose to use :
 - spring boot for backend
 
 ---
+
+### Planification
+1. create issue for following step
+2. generate ini spring project
+3. create the pipline CI
+4. set up Docker and Mysql
+5. create Event entity
+6. CRUD Event
+7. logger for event
+8. execption handler
