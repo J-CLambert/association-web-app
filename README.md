@@ -19,14 +19,13 @@
 #### Feature:
 should have:
 - CRUD on Event
-- A logger
-- manginge exection
-- sorting event on name,date of event
+- sorting by world in description, name, date of event, location, status
+- Filtering event on name,date of event
+
+#### Cross-cutting concerns
+- Logging
+- Exception Handler
 - api documentation
-- log managment
-- global exeception handler
-must to have:
-- sorting by world in description
 - docker
 
 ---
@@ -61,12 +60,13 @@ We want to use low "level of control".This means that we will not use plugin as:
 We will use hibernate but we going to rite the SQL query our-self
 
 I chose to use :
-- mysql as DB
+- mysql as DB for dev
+- H2 for testing
 - spring boot for backend
 
 ---
 
-### Planification
+### Planification (sketch)
 1. create issue for following step
 2. generate ini spring project
 3. create the pipline CI
