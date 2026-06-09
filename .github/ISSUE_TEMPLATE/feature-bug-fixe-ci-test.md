@@ -7,24 +7,38 @@ assignees: J-CLambert
 
 ---
 
-### Context
+## 1. Context 
 > Who does what and for what purpose ?
 
 
-### Problem description
+---
+
+## 2. Problem description
 > What's going on?
 
 
-### Solution description
+---
+
+## 3. Solution description
 > What is the solution?
 
 
-### Justification
+---
+
+## 4. Justification
 > Why this one and not another?
 
 
-### Notes or other information
-> other relevant information ?
+---
 
-### Acceptance criteria 
-- [ ] critter 1
+## 5.  Notes or other information
+> Other relevant information ?
+
+
+---
+
+## 6. Acceptance criteria 
+- [ ] To have ...
+
+
+---
