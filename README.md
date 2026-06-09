@@ -5,12 +5,14 @@
 ---
 
 #### Event class:
-- eventId - int
+- eventId - Long
 - name - string
-- date of event- date
+- date of event- LocalDateTime
 - duration(minutes) - int 
-- date of creation - date
+- date of creation - Instant
 - description - string
+- statut - Enum: PLANNED, IN_PROGRESS, CANCELED, COMPLETED
+- location - String
 
 ---
 
