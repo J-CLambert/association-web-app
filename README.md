@@ -71,5 +71,6 @@ I chose to use :
 4. set up Docker and Mysql
 5. create Event entity
 6. CRUD Event
+7. Unti test
 7. logger for event
-8. execption handler
+8. exception handler
