@@ -35,13 +35,13 @@ base URL : events
 
 | Short Description                       | HTTP methods | URL                          | Description                                           | URL parameters | Request Body     |
 | --------------------------------------- | ------------ | ---------------------------- | ----------------------------------------------------- | -------------- | ---------------- |
-| Create an event                         | POST         | events                       | create a event                                        | -              | new event        |
-| Read all events                         | GET          | events                       | list event(MAX 25)                                    | -              | -                |
-| Read a specific event                   | GET          | events/{eventId}             | get one event by id                                   | id             | -                |
-| Update all data of a specific event     | PUT          | events/{eventId}             | update all information in a event **except** event id | -              | complet event    |
-| Update part of data of a specific event | PATCH        | events/{eventId}             | update a part of an event                             | eventI d       | fields to update |
-| Delete an event                         | DELETE       | events/{eventId}             | delete a event                                        | event id       | -                |
-| Sort event by event properties          | GET          | events?sort=name,dateOfEvent | get a event that match withe list of criteria         | properties     | -                |
+| Create an event                         | POST         | /events                       | create a event                                        | -              | new event        |
+| Read all events                         | GET          | /events                       | list event(MAX 25)                                    | -              | -                |
+| Read a specific event                   | GET          | /events/{eventId}             | get one event by id                                   | eventId             | -                |
+| Update all data of a specific event     | PUT          | /events/{eventId}             | update all information in a event **except** event id | -              | complet event    |
+| Update part of data of a specific event | PATCH        | /events/{eventId}             | update a part of an event                             | eventId       | fields to update |
+| Delete an event                         | DELETE       | /events/{eventId}             | delete a event                                        | eventId       | -                |
+| Sort event by event properties          | GET          | /events?sort=name,dateOfEvent | get a event that match withe list of criteria         | properties     | -                |
 
 ---
 
