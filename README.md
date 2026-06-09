@@ -38,7 +38,7 @@ base URL : events
 | Create an event                         | POST         | /events                       | create a event                                        | -              | new event        |
 | Read all events                         | GET          | /events                       | list event(MAX 25)                                    | -              | -                |
 | Read a specific event                   | GET          | /events/{eventId}             | get one event by id                                   | eventId             | -                |
-| Update all data of a specific event     | PUT          | /events/{eventId}             | update all information in a event **except** event id | -              | complet event    |
+| Update all data of a specific event     | PUT          | /events/{eventId}             | update all information in a event **except** event id | evnetId             | complet event    |
 | Update part of data of a specific event | PATCH        | /events/{eventId}             | update a part of an event                             | eventId       | fields to update |
 | Delete an event                         | DELETE       | /events/{eventId}             | delete a event                                        | eventId       | -                |
 | Sort event by event properties          | GET          | /events?sort=name,dateOfEvent | get a event that match withe list of criteria         | properties     | -                |
