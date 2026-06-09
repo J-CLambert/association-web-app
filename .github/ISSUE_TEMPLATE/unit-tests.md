@@ -2,7 +2,7 @@
 name: Unit Tests
 about: Adding Unit Test
 title: 'test(EventServiceTest): '
-labels: ''
+labels: Backend, Technical code
 assignees: J-CLambert
 
 ---
