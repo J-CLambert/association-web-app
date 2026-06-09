@@ -27,4 +27,4 @@ assignees: J-CLambert
 > other relevant information ?
 
 ### Acceptance criteria 
-[]- critter 1
+- [ ] critter 1
