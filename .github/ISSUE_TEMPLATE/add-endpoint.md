@@ -44,5 +44,10 @@ This is a part of CRUD
 
 ## 6. Acceptance criteria 
 - [ ] To have be able to do-something
+- [ ] Pass test the function [----] for following case:
+- Empty lists
+- Null inputs
+- Invalid arguments
+- Nominal behavior
 
 ---
