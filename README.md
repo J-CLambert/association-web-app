@@ -1,6 +1,6 @@
-# EVENT API spesification
+# EVENT API specification
 
->This project is have as goal to provide basic feature for an association web app and to practice.
+>This project is have as goal to provide basic features for an event-api and to practice.
 
 ---
 
