@@ -1,4 +1,4 @@
-name: event-api CI/CD pipline
+name: event-api CI/CD pipeline
 on:
   push:
     pull_requests:
