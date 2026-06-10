@@ -6,10 +6,13 @@ on:
     branches:
       - main
 
-
 jobs:
   build:
     runs-on: ubuntu-lastest
+
+    defaults:
+      run:
+        working-directory: ./event-api
 
     steps:
       # Step 1: Checkout the code
