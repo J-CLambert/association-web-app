@@ -1,14 +1,13 @@
 name: event-api CI/CD pipline
 on:
   push:
-    pull_requests:
-      - main
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build:
-    runs-on: ubuntu-lastest
+  test:
+    runs-on: ubuntu-latest
 
     defaults:
       run:
@@ -27,4 +26,4 @@ jobs:
           distribution: 'temurin'
 
       - name: run Maven tests
-        run: mvn clean test
+        run: ./mvnw clean test
