@@ -8,6 +8,12 @@ services:
       - ./docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
     ports:
       - "3308:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
 
   # event-api
   event-api:
@@ -18,4 +24,5 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql-server
+      mysql-server:
+        condition: service_healthy
