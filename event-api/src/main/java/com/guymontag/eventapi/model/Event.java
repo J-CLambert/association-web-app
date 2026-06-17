@@ -5,7 +5,6 @@ import com.guymontag.eventapi.util.EventStatus;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.Objects;
 
 @Table(name = "events")
@@ -20,7 +19,7 @@ public class Event {
     private String name;
 
     @Column(name = "start_of_event")
-    private OffsetDateTime startOfEvent;
+    private Instant startOfEvent;
 
     @Column(name = "duration")
     private int duration;
@@ -31,7 +30,7 @@ public class Event {
     @Column(name = "description")
     private String description;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private EventStatus status;
 
@@ -39,7 +38,7 @@ public class Event {
     private String location;
 
 
-    public Event(String name, OffsetDateTime startOfEvent, int duration, Instant dateOfCreation, String description, EventStatus status, String location) {
+    public Event(String name, Instant startOfEvent, int duration, Instant dateOfCreation, String description, EventStatus status, String location) {
         this.name = name;
         this.startOfEvent = startOfEvent;
         this.duration = duration;
@@ -68,11 +67,11 @@ public class Event {
         this.name = name;
     }
 
-    public OffsetDateTime getStartOfEvent() {
+    public Instant getStartOfEvent() {
         return startOfEvent;
     }
 
-    public void setStartOfEvent(OffsetDateTime startOfEvent) {
+    public void setStartOfEvent(Instant startOfEvent) {
         this.startOfEvent = startOfEvent;
     }
 
