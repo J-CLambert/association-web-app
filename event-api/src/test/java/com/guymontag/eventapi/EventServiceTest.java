@@ -1,6 +1,10 @@
 package com.guymontag.eventapi;
 
+import com.guymontag.eventapi.dao.EventDAO;
+import com.guymontag.eventapi.exception.EventNotFoundException;
+import com.guymontag.eventapi.exception.IdOutOfBoundException;
 import com.guymontag.eventapi.model.Event;
+import com.guymontag.eventapi.service.EventServiceImpl;
 import com.guymontag.eventapi.util.EventStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,5 +69,22 @@ public class EventServiceTest {
         // Assert
         assertEquals("Event not found", eventNotFoundExceptionResult.getMessage());
         verify(eventDAO).findById(eventId);
+    }
+
+    @Test
+    void shouldReturnExceptionWhenEventIdIsSmallerThenZero() {
+
+        //Arrange
+        Long eventId = -23L;
+
+        //Action
+        IdOutOfBoundException idOutOfBoundException =
+                assertThrows(IdOutOfBoundException.class, () -> eventServiceImpl.getEvent(eventId));
+
+        //Assert
+        assertEquals("eventId out of bound", idOutOfBoundException.getMessage());
+
+        verify(eventDAO, times(0)).findById(eventId);
+
     }
 }
