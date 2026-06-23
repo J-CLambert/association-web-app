@@ -1,6 +1,6 @@
 package com.guymontag.eventapi.service;
 
-import com.guymontag.eventapi.model.Event;
+import com.guymontag.eventapi.entity.Event;
 
 public interface EventService {
 

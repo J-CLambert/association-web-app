@@ -3,7 +3,8 @@ package com.guymontag.eventapi;
 import com.guymontag.eventapi.dao.EventDAO;
 import com.guymontag.eventapi.exception.EventNotFoundException;
 import com.guymontag.eventapi.exception.IdOutOfBoundException;
-import com.guymontag.eventapi.model.Event;
+import com.guymontag.eventapi.entity.Event;
+import com.guymontag.eventapi.exception.IdValueNullException;
 import com.guymontag.eventapi.service.EventServiceImpl;
 import com.guymontag.eventapi.util.EventStatus;
 import org.junit.jupiter.api.Test;
@@ -82,9 +83,25 @@ public class EventServiceTest {
                 assertThrows(IdOutOfBoundException.class, () -> eventServiceImpl.getEvent(eventId));
 
         //Assert
-        assertEquals("eventId out of bound", idOutOfBoundException.getMessage());
+        assertEquals("EventId out of bound", idOutOfBoundException.getMessage());
 
         verify(eventDAO, times(0)).findById(eventId);
 
+    }
+
+    @Test
+    void shouldReturnExceptionWhenEventIdIsNull() {
+
+        //Arrange
+        IdValueNullException idValueNullExceptionExcepted = new IdValueNullException("EventId has null value");
+
+        Long eventIdNull = null;
+
+        //Action
+        IdValueNullException idValueNullExceptionResult =
+                assertThrows(IdValueNullException.class, () -> eventServiceImpl.getEvent(eventIdNull));
+
+        //Assert
+        assertEquals(idValueNullExceptionExcepted.getMessage(), idValueNullExceptionResult.getMessage());
     }
 }

@@ -1,11 +1,10 @@
 package com.guymontag.eventapi.dao;
 
-import com.guymontag.eventapi.model.Event;
+import com.guymontag.eventapi.entity.Event;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
