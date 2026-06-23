@@ -35,7 +35,7 @@ public class EventServiceTest {
         Event exceptedEvent = new Event(
                 "meting",
                 Instant.now(),
-                120,
+                60,
                 Instant.now(),
                 "description of event",
                 EventStatus.IN_PROGRESS,
