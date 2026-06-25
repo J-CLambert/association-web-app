@@ -1,6 +1,7 @@
 package com.guymontag.eventapi.controller;
 
-import com.guymontag.eventapi.entity.Event;
+import com.guymontag.eventapi.model.dto.EventDTO;
+import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     @Autowired
-    private  final EventService eventService;
+    private final EventService eventService;
 
     public EventController(EventService eventService) {
         this.eventService = eventService;
     }
 
     @GetMapping("/{eventId}")
-    public Event getEvent(@PathVariable Long eventId) {
+    public EventDTO getEvent(@PathVariable Long eventId) {
         return eventService.getEvent(eventId);
     }
 }

@@ -3,8 +3,10 @@ package com.guymontag.eventapi.service;
 import com.guymontag.eventapi.dao.EventDAO;
 import com.guymontag.eventapi.exception.EventNotFoundException;
 import com.guymontag.eventapi.exception.IdOutOfBoundException;
-import com.guymontag.eventapi.entity.Event;
+import com.guymontag.eventapi.model.dto.EventDTO;
+import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.exception.IdValueNullException;
+import com.guymontag.eventapi.util.Convertor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,19 +14,18 @@ import org.springframework.stereotype.Service;
 public class EventServiceImpl implements EventService {
 
 
+    private final EventDAO eventDAO;
+
+    private final Convertor convertor;
+
     @Autowired
-    private EventDAO eventDAO;
-
-    public EventServiceImpl(EventDAO eventDAO) {
+    public EventServiceImpl(EventDAO eventDAO, Convertor convertor) {
         this.eventDAO = eventDAO;
-    }
-
-    public EventServiceImpl() {
-
+        this.convertor = convertor;
     }
 
     @Override
-    public Event getEvent(Long eventId) {
+    public EventDTO getEvent(Long eventId) {
 
         if (eventId == null) {
             throw new IdValueNullException("EventId has null value");
@@ -34,8 +35,8 @@ public class EventServiceImpl implements EventService {
             throw new IdOutOfBoundException(
                     "EventId out of bound");
         }
-
-        return eventDAO.findById(eventId)
+        Event evntFound = eventDAO.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found"));
+        return convertor.convertEventToDTO(evntFound);
     }
 }

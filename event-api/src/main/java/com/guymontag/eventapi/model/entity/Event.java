@@ -1,4 +1,4 @@
-package com.guymontag.eventapi.entity;
+package com.guymontag.eventapi.model.entity;
 
 
 import com.guymontag.eventapi.util.EventStatus;
@@ -48,7 +48,13 @@ public class Event {
         this.location = location;
     }
 
-    public Event() {
+    public Event(String name, Instant startOfEvent, int duration, String description, EventStatus status, String location) {
+        this.name = name;
+        this.startOfEvent = startOfEvent;
+        this.duration = duration;
+        this.description = description;
+        this.status = status;
+        this.location = location;
     }
 
     public Long getEventId() {

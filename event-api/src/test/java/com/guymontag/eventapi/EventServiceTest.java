@@ -1,12 +1,16 @@
 package com.guymontag.eventapi;
 
 import com.guymontag.eventapi.dao.EventDAO;
+import com.guymontag.eventapi.exception.EventDTONullValueException;
 import com.guymontag.eventapi.exception.EventNotFoundException;
 import com.guymontag.eventapi.exception.IdOutOfBoundException;
-import com.guymontag.eventapi.entity.Event;
+import com.guymontag.eventapi.model.dto.EventDTO;
+import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.exception.IdValueNullException;
 import com.guymontag.eventapi.service.EventServiceImpl;
+import com.guymontag.eventapi.util.Convertor;
 import com.guymontag.eventapi.util.EventStatus;
+import com.guymontag.eventapi.util.validator.ValidatorImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,35 +30,11 @@ public class EventServiceTest {
     @Mock
     private EventDAO eventDAO;
 
+    @Mock
+    private Convertor convertor;
+
     @InjectMocks
     private EventServiceImpl eventServiceImpl;
-
-    @Test
-    void shouldReturnEventWhenEventExist() {
-
-        // Arrange
-        Event exceptedEvent = new Event(
-                "meting",
-                Instant.now(),
-                60,
-                Instant.now(),
-                "description of event",
-                EventStatus.IN_PROGRESS,
-                "lausanne");
-
-        long eventId = 42L;
-
-        exceptedEvent.setEventId(eventId);
-
-        when(eventDAO.findById(eventId)).thenReturn(Optional.of(exceptedEvent));
-
-        // Action
-        Event eventResult = eventServiceImpl.getEvent(eventId);
-
-        // Assert
-        assertEquals(exceptedEvent, eventResult);
-        verify(eventDAO).findById(eventId);
-    }
 
     @Test
     void shouldReturnExceptionWhenEventNotFound() {
@@ -103,5 +83,42 @@ public class EventServiceTest {
 
         //Assert
         assertEquals(idValueNullExceptionExcepted.getMessage(), idValueNullExceptionResult.getMessage());
+    }
+
+    @Test
+    void shouldReturnEventDTOWhenEventExist() {
+
+        //Arrange
+        Event eventExcepted = new Event(
+                "meting",
+                Instant.now(),
+                60,
+                Instant.now(),
+                "description of event",
+                EventStatus.IN_PROGRESS,
+                "lausanne");
+
+        long eventId = 42L;
+
+        eventExcepted.setEventId(eventId);
+
+        EventDTO eventDTOExcepted = new EventDTO(
+                eventExcepted.getName(),
+                eventExcepted.getStartOfEvent(),
+                eventExcepted.getDuration(),
+                eventExcepted.getDescription(),
+                eventExcepted.getStatus(),
+                eventExcepted.getLocation());
+
+        when(eventDAO.findById(eventId)).thenReturn(Optional.of(eventExcepted));
+
+        when(convertor.convertEventToDTO(eventExcepted)).thenReturn(eventDTOExcepted);
+        
+        // Action
+        EventDTO eventDTOResult = eventServiceImpl.getEvent(eventId);
+
+        // Assert
+        assertEquals(eventDTOExcepted, eventDTOResult);
+        verify(eventDAO).findById(eventId);
     }
 }
