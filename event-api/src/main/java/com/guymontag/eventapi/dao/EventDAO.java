@@ -1,6 +1,6 @@
 package com.guymontag.eventapi.dao;
 
-import com.guymontag.eventapi.entity.Event;
+import com.guymontag.eventapi.model.entity.Event;
 
 import java.util.Optional;
 

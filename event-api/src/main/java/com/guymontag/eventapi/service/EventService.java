@@ -1,8 +1,9 @@
 package com.guymontag.eventapi.service;
 
-import com.guymontag.eventapi.entity.Event;
+import com.guymontag.eventapi.model.dto.EventDTO;
+import com.guymontag.eventapi.model.entity.Event;
 
 public interface EventService {
 
-    Event getEvent(Long eventId);
+    EventDTO getEvent(Long eventId);
 }
