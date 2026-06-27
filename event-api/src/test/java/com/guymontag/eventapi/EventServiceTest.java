@@ -1,16 +1,13 @@
 package com.guymontag.eventapi;
 
 import com.guymontag.eventapi.dao.EventDAO;
-import com.guymontag.eventapi.exception.EventDTONullValueException;
-import com.guymontag.eventapi.exception.EventNotFoundException;
-import com.guymontag.eventapi.exception.IdOutOfBoundException;
+import com.guymontag.eventapi.exception.*;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
-import com.guymontag.eventapi.exception.IdValueNullException;
 import com.guymontag.eventapi.service.EventServiceImpl;
 import com.guymontag.eventapi.util.Convertor;
 import com.guymontag.eventapi.util.EventStatus;
-import com.guymontag.eventapi.util.validator.ValidatorImpl;
+import com.guymontag.eventapi.util.Page;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -132,8 +129,10 @@ public class EventServiceTest {
         // Arrange
         List<EventDTO> sendEventDTOs = new ArrayList<>();
 
+        int maxSize = 20;
 
-        for (int i = 0; i <= 19; i++) {
+        int totalElements = 200;
+        for (int i = 0; i <= maxSize - 1; i++) {
             EventDTO eventDTO = new EventDTO("meting",
                     Instant.now(),
                     60,
@@ -145,7 +144,7 @@ public class EventServiceTest {
 
         List<Event> foundedEvent = new ArrayList<>();
 
-        for (int i = 0; i <= 19; i++) {
+        for (int i = 0; i <= maxSize - 1; i++) {
             Event event = new Event(
                     "meting",
                     Instant.now(),
@@ -160,7 +159,7 @@ public class EventServiceTest {
 
         int pageNumber = 0;
 
-        Page<EventDTO> eventPageExcepted = new Page<EventDTO>(sendEventDTOs, pageNumber);
+        Page<EventDTO> eventPageExcepted = new Page<EventDTO>(sendEventDTOs, pageNumber, maxSize,totalElements);
 
         when(eventDAO.getEventPage(pageNumber)).thenReturn(foundedEvent);
 
@@ -170,8 +169,8 @@ public class EventServiceTest {
         Page<EventDTO> eventPageResult = eventServiceImpl.getEventPage(0);
 
         //Assert
-        assertEquals(eventPageExcepted.getEvents(), eventPageResult.getEvents());
-        assertEquals(eventPageExcepted.getPageNumber(),eventPageResult.getPageNumber());
+        assertEquals(eventPageExcepted.getElements(), eventPageResult.getElements());
+        assertEquals(eventPageExcepted.getPageNumber(), eventPageResult.getPageNumber());
     }
 
     @Test

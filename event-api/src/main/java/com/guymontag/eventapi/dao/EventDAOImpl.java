@@ -28,4 +28,9 @@ public class EventDAOImpl implements EventDAO {
 
         return findByIdQuery.getResultStream().findFirst();
     }
+
+    @Override
+    public Object getEventPage(int pageNumber) {
+        return null;
+    }
 }

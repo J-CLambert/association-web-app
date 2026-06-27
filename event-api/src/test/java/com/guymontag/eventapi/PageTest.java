@@ -1,5 +1,7 @@
 package com.guymontag.eventapi;
 
+import com.guymontag.eventapi.exception.PageSizeOutOfBoundException;
+import com.guymontag.eventapi.util.Page;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -20,13 +22,15 @@ public class PageTest {
 
         int maxSize = 20;
 
+        int totalElements = 200;
+
         List<Object> listOf20Element = new ArrayList<>(20);
 
         for (int i = 0; i <= numberObjectsExcepted - 1; i++) {
             listOf20Element.add(new Object());
         }
 
-        Page<Object> page = new Page<Object>(listOf20Element, pageNumber, maxSize);
+        Page<Object> page = new Page<>(listOf20Element, pageNumber, maxSize, totalElements);
 
         //Action
         int numberElementsResult = page.getNumberElements();
@@ -44,6 +48,8 @@ public class PageTest {
 
         int maxSize = 20;
 
+        int totalElements = 200;
+
         List<Object> listOf20Element = new ArrayList<>(20);
 
         for (int i = 0; i <= numberOfElements - 1; i++) {
@@ -54,7 +60,7 @@ public class PageTest {
 
         //Action
         PageSizeOutOfBoundException pageSizeOutOfBoundExceptionResult =
-                assertThrows(PageSizeOutOfBoundException.class, () -> new Page<Object>(listOf20Element, pageNumber, maxSize));
+                assertThrows(PageSizeOutOfBoundException.class, () -> new Page<Object>(listOf20Element, pageNumber, maxSize, totalElements));
 
         //Assert
         assertEquals(pageSizeOutOfBoundExceptionExcepted.getClass(), pageSizeOutOfBoundExceptionResult.getClass());

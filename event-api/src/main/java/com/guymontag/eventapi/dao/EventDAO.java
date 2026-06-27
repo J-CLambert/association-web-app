@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface EventDAO {
 
     Optional<Event> findById(Long eventId);
+
+    Object getEventPage(int pageNumber);
 }

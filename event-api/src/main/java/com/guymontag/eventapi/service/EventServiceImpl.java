@@ -7,6 +7,7 @@ import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.exception.IdValueNullException;
 import com.guymontag.eventapi.util.Convertor;
+import com.guymontag.eventapi.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +39,10 @@ public class EventServiceImpl implements EventService {
         Event evntFound = eventDAO.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found"));
         return convertor.convertEventToDTO(evntFound);
+    }
+
+    @Override
+    public Page<EventDTO> getEventPage(int i) {
+        return null;
     }
 }
