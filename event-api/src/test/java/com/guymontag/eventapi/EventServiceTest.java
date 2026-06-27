@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,6 +38,7 @@ public class EventServiceTest {
     @InjectMocks
     private EventServiceImpl eventServiceImpl;
 
+    // Test getEvent
     @Test
     void shouldReturnExceptionWhenEventNotFound() {
 
@@ -113,12 +116,79 @@ public class EventServiceTest {
         when(eventDAO.findById(eventId)).thenReturn(Optional.of(eventExcepted));
 
         when(convertor.convertEventToDTO(eventExcepted)).thenReturn(eventDTOExcepted);
-        
+
         // Action
         EventDTO eventDTOResult = eventServiceImpl.getEvent(eventId);
 
         // Assert
         assertEquals(eventDTOExcepted, eventDTOResult);
         verify(eventDAO).findById(eventId);
+    }
+
+    // Test GetEventPage
+    @Test
+    void shouldReturnEventDTOPageWhenPageNumberExist() {
+
+        // Arrange
+        List<EventDTO> sendEventDTOs = new ArrayList<>();
+
+
+        for (int i = 0; i <= 19; i++) {
+            EventDTO eventDTO = new EventDTO("meting",
+                    Instant.now(),
+                    60,
+                    "description of event",
+                    EventStatus.IN_PROGRESS,
+                    "lausanne");
+            sendEventDTOs.add(eventDTO);
+        }
+
+        List<Event> foundedEvent = new ArrayList<>();
+
+        for (int i = 0; i <= 19; i++) {
+            Event event = new Event(
+                    "meting",
+                    Instant.now(),
+                    60,
+                    Instant.now(),
+                    "description of event",
+                    EventStatus.IN_PROGRESS,
+                    "lausanne");
+            event.setEventId((long) i);
+            foundedEvent.add(event);
+        }
+
+        int pageNumber = 0;
+
+        Page<EventDTO> eventPageExcepted = new Page<EventDTO>(sendEventDTOs, pageNumber);
+
+        when(eventDAO.getEventPage(pageNumber)).thenReturn(foundedEvent);
+
+        when(convertor.convertEventsToDTOs(foundedEvent)).thenReturn(sendEventDTOs);
+
+        //Action
+        Page<EventDTO> eventPageResult = eventServiceImpl.getEventPage(0);
+
+        //Assert
+        assertEquals(eventPageExcepted.getEvents(), eventPageResult.getEvents());
+        assertEquals(eventPageExcepted.getPageNumber(),eventPageResult.getPageNumber());
+    }
+
+    @Test
+    void shouldReturnExceptionWhenPageNumberIsSmallerThanZero() {
+
+        //Arrange
+        int smallerThenZeroPageNumber = -1;
+
+        EventPageNumberSmallerThanZeroException eventPageNumberSmallerThanZeroExceptionExcepted = new EventPageNumberSmallerThanZeroException("Page number smaller then 0");
+
+        //Action
+        EventPageNumberSmallerThanZeroException eventPageNumberSmallerThanZeroExceptionResult =
+                assertThrows(EventPageNumberSmallerThanZeroException.class, () -> eventServiceImpl.getEventPage(smallerThenZeroPageNumber));
+
+        //Assert
+        assertEquals(eventPageNumberSmallerThanZeroExceptionExcepted.getMessage(), eventPageNumberSmallerThanZeroExceptionResult.getMessage());
+
+        verify(eventDAO, never()).getEventPage(smallerThenZeroPageNumber);
     }
 }
