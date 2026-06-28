@@ -34,7 +34,7 @@ public class EventDAOImpl implements EventDAO {
     @Override
     public List<Event> getEventPage(int pageNumber, int maxSize) {
 
-        TypedQuery<Event> pageEventQ = entityManager.createQuery("SELECT * FROM Event", Event.class);
+        TypedQuery<Event> pageEventQ = entityManager.createQuery("FROM Event", Event.class);
 
         int offset = pageNumber * maxSize;
 
@@ -48,7 +48,7 @@ public class EventDAOImpl implements EventDAO {
     @Override
     public Long getNumberOfEvent() {
 
-        TypedQuery<Long> numberEventQ = entityManager.createQuery("SELECT COUNT(e) FORM Event", Long.class);
+        TypedQuery<Long> numberEventQ = entityManager.createQuery("SELECT COUNT(e) FROM Event e", Long.class);
 
         return numberEventQ.getSingleResult();
     }

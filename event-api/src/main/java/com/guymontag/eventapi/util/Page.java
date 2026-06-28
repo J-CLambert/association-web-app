@@ -43,6 +43,7 @@ public class Page<T> {
         this.pageNumber = pageNumber;
     }
 
+
     public int getMaxSize() {
         return maxSize;
     }
@@ -60,17 +61,13 @@ public class Page<T> {
     }
 
     public int getNumberElements() {
-        if( sendElementDTOs == null){
+        if (sendElementDTOs == null) {
             throw new NullPointerException("SendElementDTOs is null");
         }
         return sendElementDTOs.size();
     }
 
-    public T getPageNumber() {
-        return null;
-    }
-
-    public List<T> getElements() {
-        return List.of();
+    public int getPageNumber() {
+        return pageNumber;
     }
 }

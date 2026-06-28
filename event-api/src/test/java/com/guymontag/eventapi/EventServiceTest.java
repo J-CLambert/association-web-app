@@ -171,7 +171,7 @@ public class EventServiceTest {
         Page<EventDTO> eventPageResult = eventServiceImpl.getEventPage(pageNumber, maxSize);
 
         //Assert
-        assertEquals(eventPageExcepted.getElements(), eventPageResult.getElements());
+        assertEquals(eventPageExcepted.getSendElementDTOs(), eventPageResult.getSendElementDTOs());
 
         assertEquals(eventPageExcepted.getPageNumber(), eventPageResult.getPageNumber());
 
