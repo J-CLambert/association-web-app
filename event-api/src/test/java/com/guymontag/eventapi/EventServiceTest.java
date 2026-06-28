@@ -168,7 +168,7 @@ public class EventServiceTest {
         when(convertor.convertEventsToDTOs(foundedEvent)).thenReturn(sendEventDTOs);
 
         //Action
-        Page<EventDTO> eventPageResult = eventServiceImpl.getEventPage(pageNumber,maxSize);
+        Page<EventDTO> eventPageResult = eventServiceImpl.getEventPage(pageNumber, maxSize);
 
         //Assert
         assertEquals(eventPageExcepted.getElements(), eventPageResult.getElements());
@@ -179,21 +179,46 @@ public class EventServiceTest {
     }
 
     @Test
-    void shouldReturnExceptionWhenPageNumberIsSmallerThanZero() {
+    void shouldReturnExceptionWhenMaxSizeIsBiggerThan100() {
 
         //Arrange
-        int smallerThenZeroPageNumber = -1;
+        int notAcceptedMaxSize = 101;
 
-        int maxSize = 20;
-        EventPageNumberSmallerThanZeroException eventPageNumberSmallerThanZeroExceptionExcepted = new EventPageNumberSmallerThanZeroException("Page number smaller then 0");
+        int pagenumber = 0;
+
+        MaxSizeException maxSizeExceptionExcepted = new MaxSizeException("MaxSize is bigger than limit 100");
 
         //Action
-        EventPageNumberSmallerThanZeroException eventPageNumberSmallerThanZeroExceptionResult =
-                assertThrows(EventPageNumberSmallerThanZeroException.class, () -> eventServiceImpl.getEventPage(smallerThenZeroPageNumber,maxSize));
+        MaxSizeException maxSizeExceptionResult = assertThrows(MaxSizeException.class, () -> eventServiceImpl.getEventPage(pagenumber, notAcceptedMaxSize));
 
         //Assert
-        assertEquals(eventPageNumberSmallerThanZeroExceptionExcepted.getMessage(), eventPageNumberSmallerThanZeroExceptionResult.getMessage());
+        assertEquals(maxSizeExceptionExcepted.getClass(), maxSizeExceptionResult.getClass());
 
-        verify(eventDAO, never()).getEventPage(smallerThenZeroPageNumber, maxSize);
+        assertEquals(maxSizeExceptionExcepted.getMessage(), maxSizeExceptionResult.getMessage());
+
+        verify(eventDAO, never()).getEventPage(pagenumber, notAcceptedMaxSize);
     }
+
+    @Test
+    void shouldThrowExceptionWhenPageNumberIsNegative() {
+
+        //Arrange
+        int negativePageNumber = -1;
+
+        int maxSize = 20;
+
+        NegativePageNumberException negativePageNumberExceptionExcepted = new NegativePageNumberException("PageNumber is negative");
+
+        //Action
+        NegativePageNumberException negativePageNumberExceptionResult =
+                assertThrows(NegativePageNumberException.class, () -> eventServiceImpl.getEventPage(negativePageNumber, maxSize));
+
+        //Assert
+        assertEquals(negativePageNumberExceptionExcepted.getClass(), negativePageNumberExceptionResult.getClass());
+
+        assertEquals(negativePageNumberExceptionExcepted.getMessage(), negativePageNumberExceptionResult.getMessage());
+
+        verify(eventDAO, never()).getEventPage(negativePageNumber, maxSize);
+    }
+
 }
