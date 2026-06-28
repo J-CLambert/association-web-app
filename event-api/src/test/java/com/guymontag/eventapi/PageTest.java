@@ -22,7 +22,7 @@ public class PageTest {
 
         int maxSize = 20;
 
-        int totalElements = 200;
+        Long totalElements = 200L;
 
         List<Object> listOf20Element = new ArrayList<>(20);
 
@@ -48,7 +48,7 @@ public class PageTest {
 
         int maxSize = 20;
 
-        int totalElements = 200;
+        Long totalElements = 200L;
 
         List<Object> listOf20Element = new ArrayList<>(20);
 

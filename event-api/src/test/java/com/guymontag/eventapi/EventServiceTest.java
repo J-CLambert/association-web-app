@@ -131,7 +131,7 @@ public class EventServiceTest {
 
         int maxSize = 20;
 
-        int totalElements = 200;
+        Long totalElements = 200L;
         for (int i = 0; i <= maxSize - 1; i++) {
             EventDTO eventDTO = new EventDTO("meting",
                     Instant.now(),
@@ -159,18 +159,23 @@ public class EventServiceTest {
 
         int pageNumber = 0;
 
-        Page<EventDTO> eventPageExcepted = new Page<EventDTO>(sendEventDTOs, pageNumber, maxSize,totalElements);
+        Page<EventDTO> eventPageExcepted = new Page<EventDTO>(sendEventDTOs, pageNumber, maxSize, totalElements);
 
-        when(eventDAO.getEventPage(pageNumber)).thenReturn(foundedEvent);
+        when(eventDAO.getEventPage(pageNumber, maxSize)).thenReturn(foundedEvent);
+
+        when(eventDAO.getNumberOfEvent()).thenReturn(totalElements);
 
         when(convertor.convertEventsToDTOs(foundedEvent)).thenReturn(sendEventDTOs);
 
         //Action
-        Page<EventDTO> eventPageResult = eventServiceImpl.getEventPage(0);
+        Page<EventDTO> eventPageResult = eventServiceImpl.getEventPage(pageNumber,maxSize);
 
         //Assert
         assertEquals(eventPageExcepted.getElements(), eventPageResult.getElements());
+
         assertEquals(eventPageExcepted.getPageNumber(), eventPageResult.getPageNumber());
+
+        verify(eventDAO, times(1)).getNumberOfEvent();
     }
 
     @Test
@@ -179,15 +184,16 @@ public class EventServiceTest {
         //Arrange
         int smallerThenZeroPageNumber = -1;
 
+        int maxSize = 20;
         EventPageNumberSmallerThanZeroException eventPageNumberSmallerThanZeroExceptionExcepted = new EventPageNumberSmallerThanZeroException("Page number smaller then 0");
 
         //Action
         EventPageNumberSmallerThanZeroException eventPageNumberSmallerThanZeroExceptionResult =
-                assertThrows(EventPageNumberSmallerThanZeroException.class, () -> eventServiceImpl.getEventPage(smallerThenZeroPageNumber));
+                assertThrows(EventPageNumberSmallerThanZeroException.class, () -> eventServiceImpl.getEventPage(smallerThenZeroPageNumber,maxSize));
 
         //Assert
         assertEquals(eventPageNumberSmallerThanZeroExceptionExcepted.getMessage(), eventPageNumberSmallerThanZeroExceptionResult.getMessage());
 
-        verify(eventDAO, never()).getEventPage(smallerThenZeroPageNumber);
+        verify(eventDAO, never()).getEventPage(smallerThenZeroPageNumber, maxSize);
     }
 }
