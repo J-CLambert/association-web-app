@@ -12,9 +12,10 @@ public class Page<T> {
 
     private int maxSize;
 
-    private int totalElements;
+    private Long totalElements;
 
-    public Page(List<T> elementDTOs, int pageNumber, int maxSize,int totalElements) {
+
+    public Page(List<T> elementDTOs, int pageNumber, int maxSize, Long totalElements) {
 
         if (elementDTOs == null) {
             throw new IllegalArgumentException("elementDTOs is null");
@@ -50,11 +51,11 @@ public class Page<T> {
         this.maxSize = maxSize;
     }
 
-    public int getTotalElements() {
+    public Long getTotalElements() {
         return totalElements;
     }
 
-    public void setTotalElements(int totalElements) {
+    public void setTotalElements(Long totalElements) {
         this.totalElements = totalElements;
     }
 
