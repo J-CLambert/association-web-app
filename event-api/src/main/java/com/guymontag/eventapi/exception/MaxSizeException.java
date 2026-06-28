@@ -1,7 +1,7 @@
 package com.guymontag.eventapi.exception;
 
-public class MaxSizeExcetion extends RuntimeException {
-    public MaxSizeExcetion(String message) {
+public class MaxSizeException extends RuntimeException {
+    public MaxSizeException(String message) {
         super(message);
     }
 }

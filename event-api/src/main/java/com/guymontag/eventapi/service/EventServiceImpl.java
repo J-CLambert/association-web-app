@@ -1,11 +1,9 @@
 package com.guymontag.eventapi.service;
 
 import com.guymontag.eventapi.dao.EventDAO;
-import com.guymontag.eventapi.exception.EventNotFoundException;
-import com.guymontag.eventapi.exception.IdOutOfBoundException;
+import com.guymontag.eventapi.exception.*;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
-import com.guymontag.eventapi.exception.IdValueNullException;
 import com.guymontag.eventapi.util.Convertor;
 import com.guymontag.eventapi.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +45,14 @@ public class EventServiceImpl implements EventService {
     @Transactional
     @Override
     public Page<EventDTO> getEventPage(int pageNumber, int maxSize) {
+
+        if(pageNumber < 0){
+            throw new NegativePageNumberException("PageNumber is negative");
+        }
+
+        if(maxSize > 100){
+            throw new MaxSizeException("MaxSize is bigger than limit 100");
+        }
 
         Long totalEvent = eventDAO.getNumberOfEvent();
 
