@@ -1,16 +1,13 @@
 package com.guymontag.eventapi;
 
 import com.guymontag.eventapi.dao.EventDAO;
-import com.guymontag.eventapi.exception.EventDTONullValueException;
-import com.guymontag.eventapi.exception.EventNotFoundException;
-import com.guymontag.eventapi.exception.IdOutOfBoundException;
+import com.guymontag.eventapi.exception.*;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
-import com.guymontag.eventapi.exception.IdValueNullException;
 import com.guymontag.eventapi.service.EventServiceImpl;
 import com.guymontag.eventapi.util.Convertor;
 import com.guymontag.eventapi.util.EventStatus;
-import com.guymontag.eventapi.util.validator.ValidatorImpl;
+import com.guymontag.eventapi.util.Page;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,6 +35,7 @@ public class EventServiceTest {
     @InjectMocks
     private EventServiceImpl eventServiceImpl;
 
+    // Test getEvent
     @Test
     void shouldReturnExceptionWhenEventNotFound() {
 
@@ -113,7 +113,7 @@ public class EventServiceTest {
         when(eventDAO.findById(eventId)).thenReturn(Optional.of(eventExcepted));
 
         when(convertor.convertEventToDTO(eventExcepted)).thenReturn(eventDTOExcepted);
-        
+
         // Action
         EventDTO eventDTOResult = eventServiceImpl.getEvent(eventId);
 
@@ -121,4 +121,104 @@ public class EventServiceTest {
         assertEquals(eventDTOExcepted, eventDTOResult);
         verify(eventDAO).findById(eventId);
     }
+
+    // Test GetEventPage
+    @Test
+    void shouldReturnEventDTOPageWhenPageNumberExist() {
+
+        // Arrange
+        List<EventDTO> sendEventDTOs = new ArrayList<>();
+
+        int maxSize = 20;
+
+        Long totalElements = 200L;
+        for (int i = 0; i <= maxSize - 1; i++) {
+            EventDTO eventDTO = new EventDTO("meting",
+                    Instant.now(),
+                    60,
+                    "description of event",
+                    EventStatus.IN_PROGRESS,
+                    "lausanne");
+            sendEventDTOs.add(eventDTO);
+        }
+
+        List<Event> foundedEvent = new ArrayList<>();
+
+        for (int i = 0; i <= maxSize - 1; i++) {
+            Event event = new Event(
+                    "meting",
+                    Instant.now(),
+                    60,
+                    Instant.now(),
+                    "description of event",
+                    EventStatus.IN_PROGRESS,
+                    "lausanne");
+            event.setEventId((long) i);
+            foundedEvent.add(event);
+        }
+
+        int pageNumber = 0;
+
+        Page<EventDTO> eventPageExcepted = new Page<EventDTO>(sendEventDTOs, pageNumber, maxSize, totalElements);
+
+        when(eventDAO.getEventPage(pageNumber, maxSize)).thenReturn(foundedEvent);
+
+        when(eventDAO.getNumberOfEvent()).thenReturn(totalElements);
+
+        when(convertor.convertEventsToDTOs(foundedEvent)).thenReturn(sendEventDTOs);
+
+        //Action
+        Page<EventDTO> eventPageResult = eventServiceImpl.getEventPage(pageNumber, maxSize);
+
+        //Assert
+        assertEquals(eventPageExcepted.getSendElementDTOs(), eventPageResult.getSendElementDTOs());
+
+        assertEquals(eventPageExcepted.getPageNumber(), eventPageResult.getPageNumber());
+
+        verify(eventDAO, times(1)).getNumberOfEvent();
+    }
+
+    @Test
+    void shouldReturnExceptionWhenMaxSizeIsBiggerThan100() {
+
+        //Arrange
+        int notAcceptedMaxSize = 101;
+
+        int pagenumber = 0;
+
+        MaxSizeException maxSizeExceptionExcepted = new MaxSizeException("MaxSize is bigger than limit 100");
+
+        //Action
+        MaxSizeException maxSizeExceptionResult = assertThrows(MaxSizeException.class, () -> eventServiceImpl.getEventPage(pagenumber, notAcceptedMaxSize));
+
+        //Assert
+        assertEquals(maxSizeExceptionExcepted.getClass(), maxSizeExceptionResult.getClass());
+
+        assertEquals(maxSizeExceptionExcepted.getMessage(), maxSizeExceptionResult.getMessage());
+
+        verify(eventDAO, never()).getEventPage(pagenumber, notAcceptedMaxSize);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenPageNumberIsNegative() {
+
+        //Arrange
+        int negativePageNumber = -1;
+
+        int maxSize = 20;
+
+        NegativePageNumberException negativePageNumberExceptionExcepted = new NegativePageNumberException("PageNumber is negative");
+
+        //Action
+        NegativePageNumberException negativePageNumberExceptionResult =
+                assertThrows(NegativePageNumberException.class, () -> eventServiceImpl.getEventPage(negativePageNumber, maxSize));
+
+        //Assert
+        assertEquals(negativePageNumberExceptionExcepted.getClass(), negativePageNumberExceptionResult.getClass());
+
+        assertEquals(negativePageNumberExceptionExcepted.getMessage(), negativePageNumberExceptionResult.getMessage());
+
+        verify(eventDAO, never()).getEventPage(negativePageNumber, maxSize);
+    }
+
 }

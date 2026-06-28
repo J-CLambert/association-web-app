@@ -1,14 +1,16 @@
 package com.guymontag.eventapi.service;
 
 import com.guymontag.eventapi.dao.EventDAO;
-import com.guymontag.eventapi.exception.EventNotFoundException;
-import com.guymontag.eventapi.exception.IdOutOfBoundException;
+import com.guymontag.eventapi.exception.*;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
-import com.guymontag.eventapi.exception.IdValueNullException;
 import com.guymontag.eventapi.util.Convertor;
+import com.guymontag.eventapi.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -38,5 +40,27 @@ public class EventServiceImpl implements EventService {
         Event evntFound = eventDAO.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found"));
         return convertor.convertEventToDTO(evntFound);
+    }
+
+    @Transactional
+    @Override
+    public Page<EventDTO> getEventPage(int pageNumber, int maxSize) {
+
+        if(pageNumber < 0){
+            throw new NegativePageNumberException("PageNumber is negative");
+        }
+
+        if(maxSize > 100){
+            throw new MaxSizeException("MaxSize is bigger than limit 100");
+        }
+
+        Long totalEvent = eventDAO.getNumberOfEvent();
+
+        List<EventDTO> eventDTOs = convertor.convertEventsToDTOs(
+                eventDAO.getEventPage(pageNumber, maxSize));
+
+        Page<EventDTO> eventDTOPage = new Page<>(eventDTOs, pageNumber, maxSize, totalEvent);
+
+        return eventDTOPage;
     }
 }

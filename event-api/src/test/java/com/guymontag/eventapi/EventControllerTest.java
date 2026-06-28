@@ -2,9 +2,11 @@ package com.guymontag.eventapi;
 
 import com.guymontag.eventapi.controller.EventController;
 import com.guymontag.eventapi.exception.EventNotFoundException;
+import com.guymontag.eventapi.exception.NullPageException;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.service.EventService;
 import com.guymontag.eventapi.util.EventStatus;
+import com.guymontag.eventapi.util.Page;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -74,6 +76,5 @@ public class EventControllerTest {
         verify(eventService, times(1)).getEvent(existingEventId);
 
     }
-
 
 }
