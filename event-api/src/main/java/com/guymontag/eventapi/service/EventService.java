@@ -8,5 +8,5 @@ public interface EventService {
 
     EventDTO getEvent(Long eventId);
 
-    Page<EventDTO> getEventPage(int i);
+    Page<EventDTO> getEventPage(int pageNumber, int maxSize);
 }

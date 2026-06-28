@@ -10,6 +10,9 @@ import com.guymontag.eventapi.util.Convertor;
 import com.guymontag.eventapi.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -41,8 +44,17 @@ public class EventServiceImpl implements EventService {
         return convertor.convertEventToDTO(evntFound);
     }
 
+    @Transactional
     @Override
-    public Page<EventDTO> getEventPage(int i) {
-        return null;
+    public Page<EventDTO> getEventPage(int pageNumber, int maxSize) {
+
+        Long totalEvent = eventDAO.getNumberOfEvent();
+
+        List<EventDTO> eventDTOs = convertor.convertEventsToDTOs(
+                eventDAO.getEventPage(pageNumber, maxSize));
+
+        Page<EventDTO> eventDTOPage = new Page<>(eventDTOs, pageNumber, maxSize, totalEvent);
+
+        return eventDTOPage;
     }
 }
