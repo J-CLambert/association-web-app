@@ -1,11 +1,14 @@
 package com.guymontag.eventapi.dao;
 
+import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
+import com.guymontag.eventapi.util.Page;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,7 +24,6 @@ public class EventDAOImpl implements EventDAO {
     @Override
     public Optional<Event> findById(Long eventId) {
 
-
         TypedQuery<Event> findByIdQuery = entityManager.createQuery("FROM Event WHERE id=:eventId", Event.class);
 
         findByIdQuery.setParameter("eventId", eventId);
@@ -30,7 +32,24 @@ public class EventDAOImpl implements EventDAO {
     }
 
     @Override
-    public Object getEventPage(int pageNumber) {
-        return null;
+    public List<Event> getEventPage(int pageNumber, int maxSize) {
+
+        TypedQuery<Event> pageEventQ = entityManager.createQuery("SELECT * FROM Event", Event.class);
+
+        int offset = pageNumber * maxSize;
+
+        pageEventQ.setFirstResult(offset);
+
+        pageEventQ.setMaxResults(maxSize);
+
+        return pageEventQ.getResultList();
+    }
+
+    @Override
+    public Long getNumberOfEvent() {
+
+        TypedQuery<Long> numberEventQ = entityManager.createQuery("SELECT COUNT(e) FORM Event", Long.class);
+
+        return numberEventQ.getSingleResult();
     }
 }
