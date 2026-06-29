@@ -1,7 +1,9 @@
 package com.guymontag.eventapi.exception;
 
-public class MaxSizeException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class MaxSizeException extends ApiException {
     public MaxSizeException(String message) {
-        super(message);
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,7 +1,9 @@
 package com.guymontag.eventapi.exception;
 
-public class EventNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class EventNotFoundException extends ApiException {
     public EventNotFoundException(String message) {
-        super(message);
+        super(message, HttpStatus.NOT_FOUND);
     }
 }
