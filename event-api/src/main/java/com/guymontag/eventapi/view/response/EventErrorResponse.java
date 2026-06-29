@@ -1,20 +1,23 @@
 package com.guymontag.eventapi.view.response;
 
-import jdk.jfr.StackTrace;
 import org.springframework.http.HttpStatus;
 
 import java.security.Timestamp;
 
-public class ErrorResponse {
+public class EventErrorResponse {
 
     private String message;
     private HttpStatus httpStatus;
-    private Timestamp timestamp;
+    private Long timestamp;
 
-    public ErrorResponse(String message, HttpStatus httpStatus, Timestamp timestamp) {
+    public EventErrorResponse(String message, HttpStatus httpStatus, Long timestamp) {
         this.message = message;
         this.httpStatus = httpStatus;
         this.timestamp = timestamp;
+    }
+
+    public EventErrorResponse() {
+
     }
 
     public String getMessage() {
@@ -33,11 +36,11 @@ public class ErrorResponse {
         this.httpStatus = httpStatus;
     }
 
-    public Timestamp getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 }
