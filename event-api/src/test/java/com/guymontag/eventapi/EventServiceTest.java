@@ -1,6 +1,6 @@
 package com.guymontag.eventapi;
 
-import com.guymontag.eventapi.dao.EventDAO;
+import com.guymontag.eventapi.view.dao.EventDAO;
 import com.guymontag.eventapi.exception.*;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;

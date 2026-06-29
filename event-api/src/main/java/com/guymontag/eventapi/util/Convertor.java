@@ -1,11 +1,13 @@
 package com.guymontag.eventapi.util;
 
-import com.guymontag.eventapi.exception.EventListNullValueExcetpion;
+import com.guymontag.eventapi.exception.EventDTOListNullValueException;
+import com.guymontag.eventapi.exception.EventListNullValueException;
 import com.guymontag.eventapi.exception.EventNullValueException;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.util.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -35,9 +37,8 @@ public class Convertor {
                     eventDTO.getStatus(),
                     eventDTO.getLocation()
             );
-
         } else {
-            throw new EventNullValueException("eventDTO has fields whit null value");
+            return null;
         }
     }
 
@@ -45,7 +46,7 @@ public class Convertor {
     public List<Event> convertDTOsToEvents(List<EventDTO> eventDTOs) {
 
         if (eventDTOs == null) {
-            throw new EventListNullValueExcetpion("list is null");
+            throw new EventDTOListNullValueException("list is null");
         }
 
         return eventDTOs.stream().map(eventDTO -> convertDTOToEvent(eventDTO)).toList();
@@ -63,9 +64,8 @@ public class Convertor {
                     event.getStatus(),
                     event.getLocation()
             );
-
         } else {
-            throw new EventNullValueException("event has fields whit null value");
+            return null;
         }
     }
 
@@ -73,7 +73,7 @@ public class Convertor {
     public List<EventDTO> convertEventsToDTOs(List<Event> events) {
         List<EventDTO> eventDTOs = new ArrayList<EventDTO>();
         if (events == null) {
-            throw new EventListNullValueExcetpion("list is null");
+            throw new EventListNullValueException("list is null");
         }
 
         return events.stream().map(event -> convertEventToDTO(event)).toList();

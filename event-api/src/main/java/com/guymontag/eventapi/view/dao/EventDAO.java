@@ -1,4 +1,4 @@
-package com.guymontag.eventapi.dao;
+package com.guymontag.eventapi.view.dao;
 
 import com.guymontag.eventapi.model.entity.Event;
 import jakarta.persistence.criteria.CriteriaBuilder;

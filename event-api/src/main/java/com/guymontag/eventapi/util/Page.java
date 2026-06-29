@@ -1,6 +1,7 @@
 package com.guymontag.eventapi.util;
 
 import com.guymontag.eventapi.exception.PageSizeOutOfBoundException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
