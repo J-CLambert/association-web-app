@@ -2,8 +2,8 @@ package com.guymontag.eventapi.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class EventDTONullValueException extends ApiException {
-    public EventDTONullValueException(String message) {
+public class EventDTOListNullValueException extends ApiException {
+    public EventDTOListNullValueException(String message) {
         super(message, HttpStatus.BAD_REQUEST);
     }
 }

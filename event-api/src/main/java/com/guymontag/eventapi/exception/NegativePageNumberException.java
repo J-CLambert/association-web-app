@@ -1,7 +1,9 @@
 package com.guymontag.eventapi.exception;
 
-public class NegativePageNumberException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class NegativePageNumberException extends ApiException {
     public NegativePageNumberException(String message) {
-        super(message);
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

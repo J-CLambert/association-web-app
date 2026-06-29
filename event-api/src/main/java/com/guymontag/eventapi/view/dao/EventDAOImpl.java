@@ -1,8 +1,6 @@
-package com.guymontag.eventapi.dao;
+package com.guymontag.eventapi.view.dao;
 
-import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
-import com.guymontag.eventapi.util.Page;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;

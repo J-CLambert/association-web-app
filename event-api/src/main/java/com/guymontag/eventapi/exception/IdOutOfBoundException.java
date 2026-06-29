@@ -1,7 +1,9 @@
 package com.guymontag.eventapi.exception;
 
-public class IdOutOfBoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class IdOutOfBoundException extends ApiException {
     public IdOutOfBoundException(String message) {
-        super(message);
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }
