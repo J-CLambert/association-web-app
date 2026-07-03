@@ -6,6 +6,8 @@ import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.util.Convertor;
 import com.guymontag.eventapi.util.Page;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ public class EventServiceImpl implements EventService {
     private final EventDAO eventDAO;
 
     private final Convertor convertor;
+
+    private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
 
     @Autowired
     public EventServiceImpl(EventDAO eventDAO, Convertor convertor) {
@@ -37,9 +41,12 @@ public class EventServiceImpl implements EventService {
         if (eventId < 0) {
             throw new IdOutOfBoundException("EventId out of bound");
         }
-        Event evntFound = eventDAO.findById(eventId)
+        Event eventFound = eventDAO.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found"));
-        return convertor.convertEventToDTO(evntFound);
+
+        log.info("get event: {}", eventFound);
+
+        return convertor.convertEventToDTO(eventFound);
     }
 
     @Transactional
@@ -60,6 +67,8 @@ public class EventServiceImpl implements EventService {
                 eventDAO.getEventPage(pageNumber, maxSize));
 
         Page<EventDTO> eventDTOPage = new Page<>(eventDTOs, pageNumber, maxSize, totalEvent);
+
+        log.info("get page with : pageNumber: {}, maxSize: {}, totalEvent: {}", pageNumber, maxSize, totalEvent);
 
         return eventDTOPage;
     }

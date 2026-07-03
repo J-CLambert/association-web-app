@@ -1,18 +1,18 @@
 package com.guymontag.eventapi.controller;
 
 import com.guymontag.eventapi.exception.ApiException;
-import com.guymontag.eventapi.exception.EventDTONullValueException;
 import com.guymontag.eventapi.view.response.EventErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.security.Timestamp;
-
 @ControllerAdvice
 public class ExceptionHandlerEvent {
 
+    private static final Logger log = LoggerFactory.getLogger(ExceptionHandlerEvent.class);
 
     //handler for custom Exception
     @ExceptionHandler
@@ -26,6 +26,8 @@ public class ExceptionHandlerEvent {
 
         eventErrorResponse.setTimestamp(System.currentTimeMillis());
 
+        chooseWhichLoggingLevel(apiException);
+
         return new ResponseEntity<>(eventErrorResponse, eventErrorResponse.getHttpStatus());
     }
 
@@ -35,12 +37,24 @@ public class ExceptionHandlerEvent {
 
         EventErrorResponse eventErrorResponse = new EventErrorResponse();
 
-        eventErrorResponse.setMessage(eventErrorResponse.getMessage());
+        eventErrorResponse.setMessage(exception.getMessage());
 
         eventErrorResponse.setTimestamp(System.currentTimeMillis());
 
-        eventErrorResponse.setHttpStatus(HttpStatus.BAD_REQUEST);
+        eventErrorResponse.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 
-        return new ResponseEntity<>(eventErrorResponse, HttpStatus.BAD_REQUEST);
+        log.error("error message :{}, error trace :{}",exception.getMessage(),exception);
+
+        return new ResponseEntity<>(eventErrorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private void chooseWhichLoggingLevel(ApiException ex) {
+        if (ex.getHttpStatus().is4xxClientError()) {
+            log.warn("{}",ex.getHttpStatus().name());
+        } else if (ex.getHttpStatus().is5xxServerError()) {
+            log.error("error : {}",ex);
+        } else {
+            log.error("{}",ex.getHttpStatus().name());
+        }
     }
 }
