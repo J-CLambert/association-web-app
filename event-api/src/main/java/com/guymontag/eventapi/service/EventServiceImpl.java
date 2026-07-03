@@ -69,7 +69,7 @@ public class EventServiceImpl implements EventService {
         Page<EventDTO> eventDTOPage = new Page<>(eventDTOs, pageNumber, maxSize, totalEvent);
 
         log.info("get page with : pageNumber: {}, maxSize: {}, totalEvent: {}", pageNumber, maxSize, totalEvent);
-                
+
         return eventDTOPage;
     }
 }
