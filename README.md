@@ -6,7 +6,7 @@
 
 #### Event class:
 - eventId - Long
-- name - string
+- name - String
 - date of event- LocalDateTime
 - duration(minutes) - int 
 - date of creation - Instant
@@ -38,10 +38,10 @@ base URL : events
 | Create an event                         | POST         | /events                       | create an event                                        | -              | new event        |
 | Read all events                         | GET          | /events                       | list event(MAX 25)                                    | -              | -                |
 | Read a specific event                   | GET          | /events/{eventId}             | get one event by id                                   | eventId             | -                |
-| Update all data of a specific event     | PUT          | /events/{eventId}             | update all information in an event **except** event id | evnetId             | complete event    |
+| Update all data of a specific event     | PUT          | /events/{eventId}             | update all information in an event **except** event id | eventId             | complete event    |
 | Update part of data of a specific event | PATCH        | /events/{eventId}             | update a part of an event                             | eventId       | fields to update |
 | Delete an event                         | DELETE       | /events/{eventId}             | delete an event                                        | eventId       | -                |
-| Sort event by event properties          | GET          | /events?sort=name,dateOfEvent | get an event that match withe list of criteria         | properties     | -                |
+| Sort event by event properties          | GET          | /events?sort=name,dateOfEvent | get an event that match with a list of criteria         | properties     | -                |
 
 ---
 
@@ -52,11 +52,11 @@ base URL : events
 
 ### Technical description
 
-I dont want to use plugins like:
+I don't want to use plugins like:
 - Spring Data REST
-- Spring DATA JPA
+- Spring Data JPA
 - JacksonMapper to map object with json file
-We will use hibernate but we going to write the SQL query ourselves
+We will use hibernate but we are going to write the SQL query ourselves
 
 I chose to use :
 - mysql as DB for dev
@@ -73,5 +73,5 @@ I chose to use :
 5. create Event entity
 6. CRUD Event
 7. Unit test
-7. logger for event
-8. exception handler
+8. logger for event
+9. exception handler
