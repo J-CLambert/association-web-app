@@ -1,6 +1,6 @@
 # EVENT API specification
 
->This project is have as goal to provide basic features for an event-api and to practice.
+>The goal of this project is to provide basic features for an event-api and to practice.
 
 ---
 
@@ -11,7 +11,7 @@
 - duration(minutes) - int 
 - date of creation - Instant
 - description - string
-- statut - Enum: PLANNED, IN_PROGRESS, CANCELED, COMPLETED
+- status - Enum: PLANNED, IN_PROGRESS, CANCELED, COMPLETED
 - location - String
 
 ---
@@ -19,7 +19,7 @@
 #### Feature:
 should have:
 - CRUD on Event
-- sorting by world in description, name, date of event, location, status
+- sorting by word in description, name, date of event, location, status
 - Filtering event on name,date of event
 
 #### Cross-cutting concerns
@@ -35,13 +35,13 @@ base URL : events
 
 | Short Description                       | HTTP methods | URL                          | Description                                           | URL parameters | Request Body     |
 | --------------------------------------- | ------------ | ---------------------------- | ----------------------------------------------------- | -------------- | ---------------- |
-| Create an event                         | POST         | /events                       | create a event                                        | -              | new event        |
+| Create an event                         | POST         | /events                       | create an event                                        | -              | new event        |
 | Read all events                         | GET          | /events                       | list event(MAX 25)                                    | -              | -                |
 | Read a specific event                   | GET          | /events/{eventId}             | get one event by id                                   | eventId             | -                |
-| Update all data of a specific event     | PUT          | /events/{eventId}             | update all information in a event **except** event id | evnetId             | complet event    |
+| Update all data of a specific event     | PUT          | /events/{eventId}             | update all information in an event **except** event id | evnetId             | complete event    |
 | Update part of data of a specific event | PATCH        | /events/{eventId}             | update a part of an event                             | eventId       | fields to update |
-| Delete an event                         | DELETE       | /events/{eventId}             | delete a event                                        | eventId       | -                |
-| Sort event by event properties          | GET          | /events?sort=name,dateOfEvent | get a event that match withe list of criteria         | properties     | -                |
+| Delete an event                         | DELETE       | /events/{eventId}             | delete an event                                        | eventId       | -                |
+| Sort event by event properties          | GET          | /events?sort=name,dateOfEvent | get an event that match withe list of criteria         | properties     | -                |
 
 ---
 
@@ -56,7 +56,7 @@ I dont want to use plugins like:
 - Spring Data REST
 - Spring DATA JPA
 - JacksonMapper to map object with json file
-We will use hibernate but we going to rite the SQL query our-self
+We will use hibernate but we going to write the SQL query ourselves
 
 I chose to use :
 - mysql as DB for dev
@@ -66,12 +66,12 @@ I chose to use :
 ---
 
 ### Planification (sketch)
-1. create issue for following step
-2. generate ini spring project
-3. create the pipline CI
+1. create issue for the following steps
+2. generate initial spring project
+3. create the CI pipeline
 4. set up Docker and Mysql
 5. create Event entity
 6. CRUD Event
-7. Unti test
+7. Unit test
 7. logger for event
 8. exception handler
