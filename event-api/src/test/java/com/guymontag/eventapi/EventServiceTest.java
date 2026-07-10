@@ -221,4 +221,80 @@ public class EventServiceTest {
         verify(eventDAO, never()).getEventPage(negativePageNumber, maxSize);
     }
 
+    @Test
+    void shouldReturnCreatedEventWhenNewEventIsValid() {
+
+        //Arrange
+        Event inputEventExcepted = new Event(
+                "meting",
+                Instant.now(),
+                60,
+                Instant.now(),
+                "description of event",
+                EventStatus.IN_PROGRESS,
+                "lausanne");
+
+        Event eventOutputExcepted = new Event(
+                "meting",
+                inputEventExcepted.getStartOfEvent(),
+                60,
+                inputEventExcepted.getDateOfCreation(),
+                "description of event",
+                EventStatus.IN_PROGRESS,
+                "lausanne");
+        long eventId = 42L;
+        eventOutputExcepted.setEventId(eventId);
+
+        EventDTO eventDTOInputExcepted = new EventDTO(
+                inputEventExcepted.getName(),
+                inputEventExcepted.getStartOfEvent(),
+                inputEventExcepted.getDuration(),
+                inputEventExcepted.getDescription(),
+                inputEventExcepted.getStatus(),
+                inputEventExcepted.getLocation());
+
+        EventDTO outputEventDTOExcepted = new EventDTO(
+                eventId,
+                inputEventExcepted.getName(),
+                inputEventExcepted.getStartOfEvent(),
+                inputEventExcepted.getDuration(),
+                inputEventExcepted.getDescription(),
+                inputEventExcepted.getStatus(),
+                inputEventExcepted.getLocation());
+
+
+        when(eventDAO.addEvent(inputEventExcepted)).thenReturn(eventOutputExcepted);
+
+        when(convertor.convertDTOToEvent(eventDTOInputExcepted)).thenReturn(inputEventExcepted);
+
+        when(convertor.convertEventToDTO(eventOutputExcepted)).thenReturn(outputEventDTOExcepted);
+
+        //Action
+        EventDTO eventResult = eventServiceImpl.addEvent(eventDTOInputExcepted);
+
+        //Assert
+        assertEquals(outputEventDTOExcepted, eventResult);
+        verify(eventDAO, times(1)).addEvent(inputEventExcepted);
+
+    }
+
+            /*
+            Fields that are NOT allowed to be empty:
+
+    name - string
+    date of event
+    duration(minutes) must be 0 by default
+    description - string
+    statut - Enum: IN_PROGRESSE by default
+
+ To have be able to creat a new event
+Pass test the function addEvent for following case:
+newEvent contain an eventId != 0
+newEvent already exists in DB -> error response 409 conflict
+some field are empty
+the date is not in paste
+the name doesn't already exist
+duration < int MAX and duration > 0
+DB is not accessible -> 500
+             */
 }
