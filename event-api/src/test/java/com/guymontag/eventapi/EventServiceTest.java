@@ -73,7 +73,7 @@ public class EventServiceTest {
     void shouldReturnExceptionWhenEventIdIsNull() {
 
         //Arrange
-        IdValueNullException idValueNullExceptionExcepted = new IdValueNullException("EventId has null value");
+        IdValueNullException idValueNullExceptionExpected = new IdValueNullException("EventId has null value");
 
         Long eventIdNull = null;
 
@@ -82,14 +82,14 @@ public class EventServiceTest {
                 assertThrows(IdValueNullException.class, () -> eventServiceImpl.getEvent(eventIdNull));
 
         //Assert
-        assertEquals(idValueNullExceptionExcepted.getMessage(), idValueNullExceptionResult.getMessage());
+        assertEquals(idValueNullExceptionExpected.getMessage(), idValueNullExceptionResult.getMessage());
     }
 
     @Test
     void shouldReturnEventDTOWhenEventExist() {
 
         //Arrange
-        Event eventExcepted = new Event(
+        Event eventExpected = new Event(
                 "meting",
                 Instant.now(),
                 60,
@@ -100,25 +100,25 @@ public class EventServiceTest {
 
         long eventId = 42L;
 
-        eventExcepted.setEventId(eventId);
+        eventExpected.setEventId(eventId);
 
-        EventDTO eventDTOExcepted = new EventDTO(
-                eventExcepted.getName(),
-                eventExcepted.getStartOfEvent(),
-                eventExcepted.getDuration(),
-                eventExcepted.getDescription(),
-                eventExcepted.getStatus(),
-                eventExcepted.getLocation());
+        EventDTO eventDTOExpected = new EventDTO(
+                eventExpected.getName(),
+                eventExpected.getStartOfEvent(),
+                eventExpected.getDuration(),
+                eventExpected.getDescription(),
+                eventExpected.getStatus(),
+                eventExpected.getLocation());
 
-        when(eventDAO.findById(eventId)).thenReturn(Optional.of(eventExcepted));
+        when(eventDAO.findById(eventId)).thenReturn(Optional.of(eventExpected));
 
-        when(convertor.convertEventToDTO(eventExcepted)).thenReturn(eventDTOExcepted);
+        when(convertor.convertEventToDTO(eventExpected)).thenReturn(eventDTOExpected);
 
         // Action
         EventDTO eventDTOResult = eventServiceImpl.getEvent(eventId);
 
         // Assert
-        assertEquals(eventDTOExcepted, eventDTOResult);
+        assertEquals(eventDTOExpected, eventDTOResult);
         verify(eventDAO).findById(eventId);
     }
 
@@ -159,7 +159,7 @@ public class EventServiceTest {
 
         int pageNumber = 0;
 
-        Page<EventDTO> eventPageExcepted = new Page<EventDTO>(sendEventDTOs, pageNumber, maxSize, totalElements);
+        Page<EventDTO> eventPageExpected = new Page<EventDTO>(sendEventDTOs, pageNumber, maxSize, totalElements);
 
         when(eventDAO.getEventPage(pageNumber, maxSize)).thenReturn(foundedEvent);
 
@@ -171,9 +171,9 @@ public class EventServiceTest {
         Page<EventDTO> eventPageResult = eventServiceImpl.getEventPage(pageNumber, maxSize);
 
         //Assert
-        assertEquals(eventPageExcepted.getSendElementDTOs(), eventPageResult.getSendElementDTOs());
+        assertEquals(eventPageExpected.getSendElementDTOs(), eventPageResult.getSendElementDTOs());
 
-        assertEquals(eventPageExcepted.getPageNumber(), eventPageResult.getPageNumber());
+        assertEquals(eventPageExpected.getPageNumber(), eventPageResult.getPageNumber());
 
         verify(eventDAO, times(1)).getNumberOfEvent();
     }
@@ -186,15 +186,15 @@ public class EventServiceTest {
 
         int pagenumber = 0;
 
-        MaxSizeException maxSizeExceptionExcepted = new MaxSizeException("MaxSize is bigger than limit 100");
+        MaxSizeException maxSizeExceptionExpected = new MaxSizeException("MaxSize is bigger than limit 100");
 
         //Action
         MaxSizeException maxSizeExceptionResult = assertThrows(MaxSizeException.class, () -> eventServiceImpl.getEventPage(pagenumber, notAcceptedMaxSize));
 
         //Assert
-        assertEquals(maxSizeExceptionExcepted.getClass(), maxSizeExceptionResult.getClass());
+        assertEquals(maxSizeExceptionExpected.getClass(), maxSizeExceptionResult.getClass());
 
-        assertEquals(maxSizeExceptionExcepted.getMessage(), maxSizeExceptionResult.getMessage());
+        assertEquals(maxSizeExceptionExpected.getMessage(), maxSizeExceptionResult.getMessage());
 
         verify(eventDAO, never()).getEventPage(pagenumber, notAcceptedMaxSize);
     }
@@ -207,16 +207,16 @@ public class EventServiceTest {
 
         int maxSize = 20;
 
-        NegativePageNumberException negativePageNumberExceptionExcepted = new NegativePageNumberException("PageNumber is negative");
+        NegativePageNumberException negativePageNumberExceptionExpected = new NegativePageNumberException("PageNumber is negative");
 
         //Action
         NegativePageNumberException negativePageNumberExceptionResult =
                 assertThrows(NegativePageNumberException.class, () -> eventServiceImpl.getEventPage(negativePageNumber, maxSize));
 
         //Assert
-        assertEquals(negativePageNumberExceptionExcepted.getClass(), negativePageNumberExceptionResult.getClass());
+        assertEquals(negativePageNumberExceptionExpected.getClass(), negativePageNumberExceptionResult.getClass());
 
-        assertEquals(negativePageNumberExceptionExcepted.getMessage(), negativePageNumberExceptionResult.getMessage());
+        assertEquals(negativePageNumberExceptionExpected.getMessage(), negativePageNumberExceptionResult.getMessage());
 
         verify(eventDAO, never()).getEventPage(negativePageNumber, maxSize);
     }
@@ -225,56 +225,94 @@ public class EventServiceTest {
     void shouldReturnCreatedEventWhenNewEventIsValid() {
 
         //Arrange
-        Event inputEventExcepted = new Event(
+        Event inputEventExpected = new Event(
                 "meting",
-                Instant.now(),
+                Instant.parse("1980-04-09T10:15:30.00Z"),
                 60,
-                Instant.now(),
+                Instant.parse("1980-04-09T10:15:30.00Z"),
                 "description of event",
                 EventStatus.IN_PROGRESS,
                 "lausanne");
 
-        Event eventOutputExcepted = new Event(
+        Event eventOutputExpected = new Event(
                 "meting",
-                inputEventExcepted.getStartOfEvent(),
+                inputEventExpected.getStartOfEvent(),
                 60,
-                inputEventExcepted.getDateOfCreation(),
+                inputEventExpected.getDateOfCreation(),
                 "description of event",
                 EventStatus.IN_PROGRESS,
                 "lausanne");
         long eventId = 42L;
-        eventOutputExcepted.setEventId(eventId);
+        eventOutputExpected.setEventId(eventId);
 
-        EventDTO eventDTOInputExcepted = new EventDTO(
-                inputEventExcepted.getName(),
-                inputEventExcepted.getStartOfEvent(),
-                inputEventExcepted.getDuration(),
-                inputEventExcepted.getDescription(),
-                inputEventExcepted.getStatus(),
-                inputEventExcepted.getLocation());
+        EventDTO eventDTOInputExpected = new EventDTO(
+                inputEventExpected.getName(),
+                inputEventExpected.getStartOfEvent(),
+                inputEventExpected.getDuration(),
+                inputEventExpected.getDescription(),
+                inputEventExpected.getStatus(),
+                inputEventExpected.getLocation());
 
-        EventDTO outputEventDTOExcepted = new EventDTO(
+        EventDTO outputEventDTOExpected = new EventDTO(
                 eventId,
-                inputEventExcepted.getName(),
-                inputEventExcepted.getStartOfEvent(),
-                inputEventExcepted.getDuration(),
-                inputEventExcepted.getDescription(),
-                inputEventExcepted.getStatus(),
-                inputEventExcepted.getLocation());
+                inputEventExpected.getName(),
+                inputEventExpected.getStartOfEvent(),
+                inputEventExpected.getDuration(),
+                inputEventExpected.getDescription(),
+                inputEventExpected.getStatus(),
+                inputEventExpected.getLocation());
 
 
-        when(eventDAO.addEvent(inputEventExcepted)).thenReturn(eventOutputExcepted);
+        when(eventDAO.addEvent(inputEventExpected)).thenReturn(eventOutputExpected);
 
-        when(convertor.convertDTOToEvent(eventDTOInputExcepted)).thenReturn(inputEventExcepted);
+        when(convertor.convertDTOToEvent(eventDTOInputExpected)).thenReturn(inputEventExpected);
 
-        when(convertor.convertEventToDTO(eventOutputExcepted)).thenReturn(outputEventDTOExcepted);
+        when(convertor.convertEventToDTO(eventOutputExpected)).thenReturn(outputEventDTOExpected);
 
         //Action
-        EventDTO eventResult = eventServiceImpl.addEvent(eventDTOInputExcepted);
+        EventDTO eventResult = eventServiceImpl.addEvent(eventDTOInputExpected);
 
         //Assert
-        assertEquals(outputEventDTOExcepted, eventResult);
-        verify(eventDAO, times(1)).addEvent(inputEventExcepted);
+        assertEquals(outputEventDTOExpected, eventResult);
+
+        verify(convertor, times(1)).convertDTOToEvent(eventDTOInputExpected);
+        verify(convertor, times(1)).convertEventToDTO(eventOutputExpected);
+
+    }
+
+    @Test
+    void shouldThrowExceptionWhenEventAlreadyExist() {
+
+        //Arrange
+        AlreadyExistEventException alreadyExistEventExceptionExpected = new AlreadyExistEventException("Event already exist");
+
+        Event inputEvent = new Event(
+                "meeting",
+                Instant.parse("1980-04-09T10:15:30.00Z"),
+                60,
+                Instant.parse("1980-04-09T10:15:30.00Z"),
+                "description of event",
+                EventStatus.IN_PROGRESS,
+                "Lausanne");
+
+        EventDTO inputEventDTO = new EventDTO( "meeting",
+                Instant.parse("1980-04-09T10:15:30.00Z"),
+                60,
+                "description of event",
+                EventStatus.IN_PROGRESS,
+                "Lausanne");
+
+        when(eventDAO.eventExistsByBusinessKey(inputEventDTO.getName(),inputEventDTO.getStartOfEvent())).thenReturn(true);
+
+        //Action
+
+        AlreadyExistEventException alreadyExistEventExceptionResult = assertThrows(AlreadyExistEventException.class, () -> eventServiceImpl.addEvent(inputEventDTO));
+
+        //Assert
+
+        assertEquals(alreadyExistEventExceptionExpected.getMessage(), alreadyExistEventExceptionResult.getMessage());
+        verify(eventDAO, never()).addEvent(inputEvent);
+        verify(eventDAO,times(1)).eventExistsByBusinessKey(inputEventDTO.getName(),inputEventDTO.getStartOfEvent());
 
     }
 
@@ -287,7 +325,7 @@ public class EventServiceTest {
     description - string
     statut - Enum: IN_PROGRESSE by default
 
- To have be able to creat a new event
+ To be able to create a new event
 Pass test the function addEvent for following case:
 newEvent contain an eventId != 0
 newEvent already exists in DB -> error response 409 conflict

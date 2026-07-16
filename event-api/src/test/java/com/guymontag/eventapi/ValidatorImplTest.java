@@ -8,6 +8,7 @@ import com.guymontag.eventapi.util.EventStatus;
 import com.guymontag.eventapi.util.validator.Validator;
 import com.guymontag.eventapi.util.validator.ValidatorImpl;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.time.Instant;
 
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ValidatorImplTest {
 
     Validator validator = new ValidatorImpl();
+
 
     @Test
     void shouldReturnFalseWhenEventFieldIsNull() {
