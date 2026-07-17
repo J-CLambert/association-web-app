@@ -101,7 +101,6 @@ public class ValidatorImplTest {
     @Test
     void shouldThrowExceptionWhenEventIsInThePassAndPlanned() {
         //Arrange
-
         EventDTO evntInPast = new EventDTO(
                 "meting",
                 Instant.parse("1999-01-01T00:00:00.00Z"),
@@ -119,11 +118,64 @@ public class ValidatorImplTest {
 
         //Assert
         assertEquals(pastEventPlannedExceptionExpected.getMessage(), pastEventPlannedExceptionResult.getMessage());
+    }
 
+    @Test
+    void shouldReturnTrueWhenEventIsInThePassAndCompleted() {
+        //Arrange
+        EventDTO evntInPast = new EventDTO(
+                "meting",
+                Instant.parse("1999-01-01T00:00:00.00Z"),
+                60,
+                "description of event",
+                EventStatus.COMPLETED,
+                null);
+
+        //Action
+        boolean newEventIsValidResult = validator.newEventTimeCheck(evntInPast);
+
+        //Assert
+        assertEquals(true, newEventIsValidResult);
     }
 
     @Test
     void shouldThrowExceptionWhenEventIsInFutureAndCompleted() {
+        //Arrange
+        EventDTO evntInPast = new EventDTO(
+                "meting",
+                Instant.parse("2050-01-01T00:00:00.00Z"),
+                60,
+                "description of event",
+                EventStatus.COMPLETED,
+                null);
 
+
+        FuturEventCompletedException futurEventCompletedExceptionExpected = new FuturEventCompletedException("Event cannot be completed and be in the future");
+
+        //Action
+        FuturEventCompletedException futurEventCompletedExceptionResult =
+                assertThrows(FuturEventCompletedException.class, () -> validator.newEventTimeCheck(evntInPast));
+
+        //Assert
+        assertEquals(futurEventCompletedExceptionExpected.getMessage(), futurEventCompletedExceptionResult.getMessage());
+
+    }
+
+    @Test
+    void shouldReturnTrueWhenEventIsInFuturAndPlanned() {
+        //Arrange
+        EventDTO evntInPast = new EventDTO(
+                "meting",
+                Instant.parse("2050-01-01T00:00:00.00Z"),
+                60,
+                "description of event",
+                EventStatus.PLANNED,
+                null);
+
+        //Action
+        boolean newEventIsValidResult = validator.newEventTimeCheck(evntInPast);
+
+        //Assert
+        assertEquals(true, newEventIsValidResult);
     }
 }

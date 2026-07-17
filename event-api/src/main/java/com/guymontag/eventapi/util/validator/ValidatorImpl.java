@@ -15,6 +15,7 @@ public class ValidatorImpl implements Validator {
 
 private Clock clock;
 
+
     public ValidatorImpl(Clock clock) {
     }
 
