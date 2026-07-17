@@ -7,18 +7,23 @@ import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.util.EventStatus;
 import com.guymontag.eventapi.util.validator.Validator;
 import com.guymontag.eventapi.util.validator.ValidatorImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import java.time.Clock;
 import java.time.Instant;
+import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ValidatorImplTest {
 
-    Validator validator = new ValidatorImpl();
 
+    ValidatorImpl validator = new ValidatorImpl(Clock.fixed(
+            Instant.parse("2020-01-01T00:00:00.00Z"),
+            ZoneId.of("UTC")));
 
     @Test
     void shouldReturnFalseWhenEventFieldIsNull() {
@@ -91,5 +96,34 @@ public class ValidatorImplTest {
         //Assert
         assertEquals(eventDTONullValueExceptionExcepted.getMessage(), eventDTONullValueExceptionResult.getMessage());
         assertEquals(eventDTONullValueExceptionExcepted.getClass(), eventDTONullValueExceptionResult.getClass());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenEventIsInThePassAndPlanned() {
+        //Arrange
+
+        EventDTO evntInPast = new EventDTO(
+                "meting",
+                Instant.parse("1999-01-01T00:00:00.00Z"),
+                60,
+                "description of event",
+                EventStatus.PLANNED,
+                null);
+
+
+        PastEventPlannedException pastEventPlannedExceptionExpected = new PastEventPlannedException("Event cannot be planned and be in the past");
+
+        //Action
+        PastEventPlannedException pastEventPlannedExceptionResult =
+                assertThrows(PastEventPlannedException.class, () -> validator.newEventTimeCheck(evntInPast));
+
+        //Assert
+        assertEquals(pastEventPlannedExceptionExpected.getMessage(), pastEventPlannedExceptionResult.getMessage());
+
+    }
+
+    @Test
+    void shouldThrowExceptionWhenEventIsInFutureAndCompleted() {
+
     }
 }

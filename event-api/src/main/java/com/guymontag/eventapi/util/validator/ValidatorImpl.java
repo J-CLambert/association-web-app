@@ -7,12 +7,15 @@ import com.guymontag.eventapi.model.entity.Event;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
+
 @Component
 @Lazy
 public class ValidatorImpl implements Validator {
 
+private Clock clock;
 
-    public ValidatorImpl() {
+    public ValidatorImpl(Clock clock) {
     }
 
     //Validation
