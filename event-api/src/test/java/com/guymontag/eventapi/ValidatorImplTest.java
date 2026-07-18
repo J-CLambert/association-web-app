@@ -5,24 +5,20 @@ import com.guymontag.eventapi.exception.EventNullValueException;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.util.EventStatus;
-import com.guymontag.eventapi.util.validator.Validator;
 import com.guymontag.eventapi.util.validator.ValidatorImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ValidatorImplTest {
 
 
     ValidatorImpl validator = new ValidatorImpl(Clock.fixed(
-            Instant.parse("2020-01-01T00:00:00.00Z"),
+            Instant.parse("2020-01-01T00:10:00.00Z"),
             ZoneId.of("UTC")));
 
     @Test
@@ -37,13 +33,11 @@ public class ValidatorImplTest {
                 EventStatus.IN_PROGRESS,
                 "lausanne");
 
-        boolean excepted = false;
-
         //Action
         boolean result = validator.checkFieldsNotNullEvent(event);
 
         //Assert
-        assertEquals(excepted, result);
+        assertFalse(result);
     }
 
     @Test
@@ -57,13 +51,11 @@ public class ValidatorImplTest {
                 EventStatus.IN_PROGRESS,
                 null);
 
-        boolean excepted = false;
-
         //Action
         boolean result = validator.checkFieldsNotNullDTO(eventDTO);
 
         //Assert
-        assertEquals(excepted, result);
+        assertFalse(result);
     }
 
     @Test
@@ -99,9 +91,9 @@ public class ValidatorImplTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenEventIsInThePassAndPlanned() {
+    void shouldThrowExceptionWhenEventIsInThePastAndPlanned() {
         //Arrange
-        EventDTO evntInPast = new EventDTO(
+        EventDTO eventInPast = new EventDTO(
                 "meting",
                 Instant.parse("1999-01-01T00:00:00.00Z"),
                 60,
@@ -114,16 +106,40 @@ public class ValidatorImplTest {
 
         //Action
         PastEventPlannedException pastEventPlannedExceptionResult =
-                assertThrows(PastEventPlannedException.class, () -> validator.newEventTimeCheck(evntInPast));
+                assertThrows(PastEventPlannedException.class, () -> validator.newEventTimeCheck(eventInPast));
 
         //Assert
         assertEquals(pastEventPlannedExceptionExpected.getMessage(), pastEventPlannedExceptionResult.getMessage());
     }
 
+
+    @Test
+    void shouldThrowExceptionWhenEventIsInNearPastAndPlanned() {
+        //Arrange
+        EventDTO eventInPast = new EventDTO(
+                "meting",
+                Instant.parse("2020-01-01T00:10:00.00Z").minusNanos(1),
+                60,
+                "description of event",
+                EventStatus.PLANNED,
+                null);
+
+
+        PastEventPlannedException pastEventPlannedExceptionExpected = new PastEventPlannedException("Event cannot be planned and be in the past");
+
+        //Action
+        PastEventPlannedException pastEventPlannedExceptionResult =
+                assertThrows(PastEventPlannedException.class, () -> validator.newEventTimeCheck(eventInPast));
+
+        //Assert
+        assertEquals(pastEventPlannedExceptionExpected.getMessage(), pastEventPlannedExceptionResult.getMessage());
+    }
+
+
     @Test
     void shouldReturnTrueWhenEventIsInThePassAndCompleted() {
         //Arrange
-        EventDTO evntInPast = new EventDTO(
+        EventDTO eventInPast = new EventDTO(
                 "meting",
                 Instant.parse("1999-01-01T00:00:00.00Z"),
                 60,
@@ -132,16 +148,16 @@ public class ValidatorImplTest {
                 null);
 
         //Action
-        boolean newEventIsValidResult = validator.newEventTimeCheck(evntInPast);
+        boolean newEventIsValidResult = validator.newEventTimeCheck(eventInPast);
 
         //Assert
-        assertEquals(true, newEventIsValidResult);
+        assertTrue(newEventIsValidResult);
     }
 
     @Test
     void shouldThrowExceptionWhenEventIsInFutureAndCompleted() {
         //Arrange
-        EventDTO evntInPast = new EventDTO(
+        EventDTO eventInFuture = new EventDTO(
                 "meting",
                 Instant.parse("2050-01-01T00:00:00.00Z"),
                 60,
@@ -154,7 +170,7 @@ public class ValidatorImplTest {
 
         //Action
         FuturEventCompletedException futurEventCompletedExceptionResult =
-                assertThrows(FuturEventCompletedException.class, () -> validator.newEventTimeCheck(evntInPast));
+                assertThrows(FuturEventCompletedException.class, () -> validator.newEventTimeCheck(eventInFuture));
 
         //Assert
         assertEquals(futurEventCompletedExceptionExpected.getMessage(), futurEventCompletedExceptionResult.getMessage());
@@ -164,7 +180,7 @@ public class ValidatorImplTest {
     @Test
     void shouldReturnTrueWhenEventIsInFuturAndPlanned() {
         //Arrange
-        EventDTO evntInPast = new EventDTO(
+        EventDTO eventInFuture = new EventDTO(
                 "meting",
                 Instant.parse("2050-01-01T00:00:00.00Z"),
                 60,
@@ -173,9 +189,30 @@ public class ValidatorImplTest {
                 null);
 
         //Action
-        boolean newEventIsValidResult = validator.newEventTimeCheck(evntInPast);
+        boolean newEventIsValidResult = validator.newEventTimeCheck(eventInFuture);
 
         //Assert
-        assertEquals(true, newEventIsValidResult);
+        assertTrue(newEventIsValidResult);
     }
+
+    @Test
+    void shouldReturnTrueWhenEventIsNowAndIsPlanned() {
+        //Arrange
+        EventDTO eventInNow = new EventDTO(
+                "meting",
+                // the date
+                Instant.parse("2020-01-01T00:10:00.00Z"),
+                60,
+                "description of event",
+                EventStatus.PLANNED,
+                null);
+
+
+        //Action
+        boolean newEventIsValidResult = validator.newEventTimeCheck(eventInNow);
+
+        //Assert
+        assertTrue(newEventIsValidResult);
+    }
+
 }
