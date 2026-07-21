@@ -254,7 +254,6 @@ public class EventServiceTest {
                 inputEventExpected.getLocation());
 
         EventDTO outputEventDTOExpected = new EventDTO(
-                eventId,
                 inputEventExpected.getName(),
                 inputEventExpected.getStartOfEvent(),
                 inputEventExpected.getDuration(),
@@ -315,24 +314,4 @@ public class EventServiceTest {
         verify(eventDAO,times(1)).eventExistsByBusinessKey(inputEventDTO.getName(),inputEventDTO.getStartOfEvent());
 
     }
-
-            /*
-            Fields that are NOT allowed to be empty:
-
-    name - string
-    date of event
-    duration(minutes) must be 0 by default
-    description - string
-    statut - Enum: IN_PROGRESSE by default
-
- To be able to create a new event
-Pass test the function addEvent for following case:
-newEvent contain an eventId != 0
-newEvent already exists in DB -> error response 409 conflict
-some field are empty
-the date is not in paste
-the name doesn't already exist
-duration < int MAX and duration > 0
-DB is not accessible -> 500
-             */
 }

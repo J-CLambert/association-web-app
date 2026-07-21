@@ -7,26 +7,29 @@ import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.util.EventStatus;
 import com.guymontag.eventapi.util.validator.ValidatorImpl;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ValidatorImplTest {
 
-
-    ValidatorImpl validator = new ValidatorImpl(Clock.fixed(
-            Instant.parse("2020-01-01T00:10:00.00Z"),
-            ZoneId.of("UTC")));
+    Clock fixedClock = Clock.fixed(Instant.parse("2020-01-01T00:10:00.00Z"), ZoneId.of("UTC"));
+    ValidatorImpl validator = new ValidatorImpl(fixedClock);
 
     @Test
     void shouldReturnFalseWhenEventFieldIsNull() {
         // Arrange
         Event event = new Event(
                 "meting",
-                Instant.now(),
+                Instant.now(fixedClock),
                 60,
                 null,
                 "description of event",
@@ -40,16 +43,38 @@ public class ValidatorImplTest {
         assertFalse(result);
     }
 
-    @Test
-    void shouldReturnFalseWhenDTOFieldIsNull() {
-        // Arrange
-        EventDTO eventDTO = new EventDTO(
-                "meting",
-                Instant.now(),
+    static Stream<EventDTO> eventDTOWithNullField() {
+
+        EventDTO exempleOfEventDTO = new EventDTO(
+                "meeting",
+                Instant.parse("2020-01-01T00:10:00.00Z"),
                 60,
                 "description of event",
                 EventStatus.IN_PROGRESS,
-                null);
+                "Lausanne");
+
+        EventDTO eventDTONullStartOfEvent = exempleOfEventDTO.copy();
+        eventDTONullStartOfEvent.setStartOfEvent(null);
+
+        EventDTO eventDTONullDescription = exempleOfEventDTO.copy();
+        eventDTONullDescription.setDescription(null);
+
+        EventDTO eventDTONullStatus = exempleOfEventDTO.copy();
+        eventDTONullStatus.setStatus(null);
+
+        EventDTO eventDTONullLocation = exempleOfEventDTO.copy();
+        eventDTONullLocation.setLocation(null);
+
+        EventDTO eventDTONullName = exempleOfEventDTO.copy();
+        eventDTONullName.setName(null);
+
+        return Stream.of(eventDTONullName, eventDTONullDescription, eventDTONullLocation, eventDTONullStatus, eventDTONullStartOfEvent);
+    }
+
+    @ParameterizedTest
+    @MethodSource("eventDTOWithNullField")
+    void shouldReturnFalseWhenDTOFieldIsNull(EventDTO eventDTO) {
+        // Arrange
 
         //Action
         boolean result = validator.checkFieldsNotNullDTO(eventDTO);

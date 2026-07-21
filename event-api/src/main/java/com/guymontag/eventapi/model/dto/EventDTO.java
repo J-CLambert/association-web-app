@@ -77,5 +77,13 @@ public class EventDTO {
         this.location = location;
     }
 
-
+    public EventDTO copy() {
+        return new EventDTO(
+                this.getName(),
+                this.getStartOfEvent(),
+                this.getDuration(),
+                this.getDescription(),
+                this.getStatus(),
+                this.getLocation());
+    }
 }
