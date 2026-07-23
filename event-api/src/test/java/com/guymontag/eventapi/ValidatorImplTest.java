@@ -2,6 +2,8 @@ package com.guymontag.eventapi;
 
 import com.guymontag.eventapi.exception.EventDTONullValueException;
 import com.guymontag.eventapi.exception.EventNullValueException;
+import com.guymontag.eventapi.exception.FuturEventCompletedException;
+import com.guymontag.eventapi.exception.PastEventPlannedException;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.util.EventStatus;

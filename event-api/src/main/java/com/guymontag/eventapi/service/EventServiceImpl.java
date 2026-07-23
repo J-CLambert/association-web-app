@@ -63,4 +63,10 @@ public class EventServiceImpl implements EventService {
 
         return eventDTOPage;
     }
+
+    @Transactional
+    @Override
+    public EventDTO addEvent(EventDTO inputEventDTO) {
+        return null;
+    }
 }

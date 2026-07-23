@@ -9,4 +9,6 @@ public interface EventService {
     EventDTO getEvent(Long eventId);
 
     Page<EventDTO> getEventPage(int pageNumber, int maxSize);
+
+    EventDTO addEvent(EventDTO inputEventDTO);
 }

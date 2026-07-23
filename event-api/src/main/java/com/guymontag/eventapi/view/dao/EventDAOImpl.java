@@ -6,6 +6,7 @@ import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,5 +50,15 @@ public class EventDAOImpl implements EventDAO {
         TypedQuery<Long> numberEventQ = entityManager.createQuery("SELECT COUNT(e) FROM Event e", Long.class);
 
         return numberEventQ.getSingleResult();
+    }
+
+    @Override
+    public Object eventExistsByBusinessKey(String name, Instant startOfEvent) {
+        return null;
+    }
+
+    @Override
+    public Event addEvent(Event inputEvent) {
+        return null;
     }
 }

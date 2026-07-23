@@ -7,4 +7,6 @@ public interface Validator {
     boolean checkFieldsNotNullEvent(Event event);
 
     boolean checkFieldsNotNullDTO(EventDTO eventDTO);
+
+    boolean newEventTimeCheck(EventDTO eventInNow);
 }
