@@ -5,13 +5,11 @@ import com.guymontag.eventapi.exception.EventNullValueException;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.util.EventStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -61,10 +59,10 @@ public class ValidatorImpl implements Validator {
 
     @Override
     public boolean newEventTimeCheck(EventDTO eventInNow) {
-
-        Predicate<EventDTO> isPastAndPlanned = eventDTO -> eventDTO.getStartOfEvent().isBefore(Instant.now(clock)) && (eventDTO.getStatus() == EventStatus.PLANNED);
-        Predicate<EventDTO> isFutureAndCompleted = eventDTO -> eventDTO.getStartOfEvent().isAfter(Instant.now(clock)) && (eventDTO.getStatus() == EventStatus.COMPLETED);
-        Stream<Predicate<EventDTO>> constraints = Stream.of(isFutureAndCompleted,isPastAndPlanned);
-        constraints.findFirst()
+        Instant clockNow = Instant.now(clock);
+        Predicate<EventDTO> isPastAndPlanned = eventDTO -> eventDTO.getStartOfEvent().isBefore(clockNow) && (eventDTO.getStatus() == EventStatus.PLANNED);
+        Predicate<EventDTO> isFutureAndCompleted = eventDTO -> eventDTO.getStartOfEvent().isAfter(clockNow) && (eventDTO.getStatus() == EventStatus.COMPLETED);
+        Stream<Predicate<EventDTO>> constraints = Stream.of(isFutureAndCompleted, isPastAndPlanned);
+        return constraints.anyMatch(rejectConditions -> rejectConditions.test(eventInNow));
     }
 }
