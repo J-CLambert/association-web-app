@@ -59,6 +59,9 @@ public class EventDAOImpl implements EventDAO {
 
     @Override
     public Event addEvent(Event inputEvent) {
-        return null;
+        TypedQuery<Event> byIdQuery = entityManager.createQuery(
+                "SELECT Event e FROM Event WHERE id=:eventId", Event.class);
+        byIdQuery.setParameter("eventId", inputEvent.getEventId());
+        return byIdQuery.getSingleResult();
     }
 }

@@ -7,6 +7,7 @@ import com.guymontag.eventapi.exception.PastEventPlannedException;
 import com.guymontag.eventapi.model.dto.EventDTO;
 import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.util.EventStatus;
+import com.guymontag.eventapi.util.validator.ConstraintsValidEvent;
 import com.guymontag.eventapi.util.validator.ValidatorImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ValidatorImplTest {
 
     Clock fixedClock = Clock.fixed(Instant.parse("2020-01-01T00:10:00.00Z"), ZoneId.of("UTC"));
-    ValidatorImpl validator = new ValidatorImpl(fixedClock);
+    ConstraintsValidEvent constraintsValidEvent = new ConstraintsValidEvent(fixedClock);
+    ValidatorImpl validator = new ValidatorImpl(fixedClock, constraintsValidEvent);
 
     @Test
     void shouldReturnFalseWhenEventFieldIsNull() {
