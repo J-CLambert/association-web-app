@@ -1,8 +1,6 @@
-package com.guymontag.eventapi.view.response;
+package com.guymontag.eventapi.dto.response;
 
 import org.springframework.http.HttpStatus;
-
-import java.security.Timestamp;
 
 public class EventErrorResponse {
 

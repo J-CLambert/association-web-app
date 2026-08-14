@@ -1,13 +1,13 @@
 package com.guymontag.eventapi.service;
 
-import com.guymontag.eventapi.model.dto.EventDTO;
+import com.guymontag.eventapi.dto.EventDTOInput;
 import com.guymontag.eventapi.util.Page;
 
 public interface EventService {
 
-    EventDTO getEvent(Long eventId);
+    EventDTOInput getEvent(Long eventId);
 
-    Page<EventDTO> getEventPage(int pageNumber, int maxSize);
+    Page<EventDTOInput> getEventPage(int pageNumber, int maxSize);
 
-    EventDTO addEvent(EventDTO inputEventDTO);
+    EventDTOInput addEvent(EventDTOInput inputEventDTOInput);
 }

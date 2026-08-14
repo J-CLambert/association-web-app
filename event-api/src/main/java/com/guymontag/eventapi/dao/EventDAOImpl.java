@@ -1,6 +1,6 @@
-package com.guymontag.eventapi.view.dao;
+package com.guymontag.eventapi.dao;
 
-import com.guymontag.eventapi.model.entity.Event;
+import com.guymontag.eventapi.entity.Event;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,15 +53,26 @@ public class EventDAOImpl implements EventDAO {
     }
 
     @Override
-    public Object eventExistsByBusinessKey(String name, Instant startOfEvent) {
-        return null;
+    public boolean eventExistsByBusinessKey(String name, Instant startOfEvent) {
+
+        String jpqlWhereNameAndStartOfEvent = "SELECT Event e FROM Event WHERE name=:eventName AND startOfEvent=:eventStartOfEvent";
+
+        TypedQuery<Event> byIdQuery = entityManager.createQuery(jpqlWhereNameAndStartOfEvent, Event.class);
+
+        byIdQuery.setParameter("name", name);
+
+        byIdQuery.setParameter("eventStartOfEvent", startOfEvent);
+
+        return !byIdQuery.getResultList().isEmpty();
     }
 
     @Override
     public Event addEvent(Event inputEvent) {
-        TypedQuery<Event> byIdQuery = entityManager.createQuery(
-                "SELECT Event e FROM Event WHERE id=:eventId", Event.class);
+
+        TypedQuery<Event> byIdQuery = entityManager.createQuery("SELECT Event e FROM Event WHERE id=:eventId", Event.class);
+
         byIdQuery.setParameter("eventId", inputEvent.getEventId());
+
         return byIdQuery.getSingleResult();
     }
 }

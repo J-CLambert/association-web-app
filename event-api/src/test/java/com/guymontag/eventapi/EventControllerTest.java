@@ -2,11 +2,9 @@ package com.guymontag.eventapi;
 
 import com.guymontag.eventapi.controller.EventController;
 import com.guymontag.eventapi.exception.EventNotFoundException;
-import com.guymontag.eventapi.exception.NullPageException;
-import com.guymontag.eventapi.model.dto.EventDTO;
+import com.guymontag.eventapi.dto.EventDTOInput;
 import com.guymontag.eventapi.service.EventService;
 import com.guymontag.eventapi.util.EventStatus;
-import com.guymontag.eventapi.util.Page;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -57,7 +55,7 @@ public class EventControllerTest {
         //Arrange
         Long existingEventId = 42L;
 
-        EventDTO eventDTOExcepted = new EventDTO(
+        EventDTOInput eventDTOInputExcepted = new EventDTOInput(
                 "meting",
                 Instant.now(),
                 60,
@@ -65,14 +63,14 @@ public class EventControllerTest {
                 EventStatus.IN_PROGRESS,
                 "lausanne");
 
-        when(eventService.getEvent(existingEventId)).thenReturn(eventDTOExcepted);
+        when(eventService.getEvent(existingEventId)).thenReturn(eventDTOInputExcepted);
 
         //Action
 
-        EventDTO eventDTOResult = eventService.getEvent(existingEventId);
+        EventDTOInput eventDTOInputResult = eventService.getEvent(existingEventId);
 
         //Assert
-        assertEquals(eventDTOExcepted, eventDTOResult);
+        assertEquals(eventDTOInputExcepted, eventDTOInputResult);
         verify(eventService, times(1)).getEvent(existingEventId);
 
     }

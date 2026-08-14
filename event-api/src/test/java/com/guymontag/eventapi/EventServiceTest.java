@@ -1,9 +1,10 @@
 package com.guymontag.eventapi;
 
-import com.guymontag.eventapi.view.dao.EventDAO;
+import com.guymontag.eventapi.dao.EventDAO;
+import com.guymontag.eventapi.dto.response.EventDTOOutput;
 import com.guymontag.eventapi.exception.*;
-import com.guymontag.eventapi.model.dto.EventDTO;
-import com.guymontag.eventapi.model.entity.Event;
+import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.entity.Event;
 import com.guymontag.eventapi.service.EventServiceImpl;
 import com.guymontag.eventapi.util.Convertor;
 import com.guymontag.eventapi.util.EventStatus;
@@ -102,7 +103,7 @@ public class EventServiceTest {
 
         eventExpected.setEventId(eventId);
 
-        EventDTO eventDTOExpected = new EventDTO(
+        EventDTOInput eventDTOInputExpected = new EventDTOInput(
                 eventExpected.getName(),
                 eventExpected.getStartOfEvent(),
                 eventExpected.getDuration(),
@@ -112,13 +113,13 @@ public class EventServiceTest {
 
         when(eventDAO.findById(eventId)).thenReturn(Optional.of(eventExpected));
 
-        when(convertor.convertEventToDTO(eventExpected)).thenReturn(eventDTOExpected);
+        when(convertor.convertEventToDTO(eventExpected)).thenReturn(eventDTOInputExpected);
 
         // Action
-        EventDTO eventDTOResult = eventServiceImpl.getEvent(eventId);
+        EventDTOInput eventDTOInputResult = eventServiceImpl.getEvent(eventId);
 
         // Assert
-        assertEquals(eventDTOExpected, eventDTOResult);
+        assertEquals(eventDTOInputExpected, eventDTOInputResult);
         verify(eventDAO).findById(eventId);
     }
 
@@ -127,19 +128,19 @@ public class EventServiceTest {
     void shouldReturnEventDTOPageWhenPageNumberExist() {
 
         // Arrange
-        List<EventDTO> sendEventDTOs = new ArrayList<>();
+        List<EventDTOInput> sendEventDTOInputs = new ArrayList<>();
 
         int maxSize = 20;
 
         Long totalElements = 200L;
         for (int i = 0; i <= maxSize - 1; i++) {
-            EventDTO eventDTO = new EventDTO("meting",
+            EventDTOInput eventDTOInput = new EventDTOInput("meting",
                     Instant.now(),
                     60,
                     "description of event",
                     EventStatus.IN_PROGRESS,
                     "lausanne");
-            sendEventDTOs.add(eventDTO);
+            sendEventDTOInputs.add(eventDTOInput);
         }
 
         List<Event> foundedEvent = new ArrayList<>();
@@ -159,16 +160,16 @@ public class EventServiceTest {
 
         int pageNumber = 0;
 
-        Page<EventDTO> eventPageExpected = new Page<EventDTO>(sendEventDTOs, pageNumber, maxSize, totalElements);
+        Page<EventDTOInput> eventPageExpected = new Page<EventDTOInput>(sendEventDTOInputs, pageNumber, maxSize, totalElements);
 
         when(eventDAO.getEventPage(pageNumber, maxSize)).thenReturn(foundedEvent);
 
         when(eventDAO.getNumberOfEvent()).thenReturn(totalElements);
 
-        when(convertor.convertEventsToDTOs(foundedEvent)).thenReturn(sendEventDTOs);
+        when(convertor.convertEventsToDTOs(foundedEvent)).thenReturn(sendEventDTOInputs);
 
         //Action
-        Page<EventDTO> eventPageResult = eventServiceImpl.getEventPage(pageNumber, maxSize);
+        Page<EventDTOInput> eventPageResult = eventServiceImpl.getEventPage(pageNumber, maxSize);
 
         //Assert
         assertEquals(eventPageExpected.getSendElementDTOs(), eventPageResult.getSendElementDTOs());
@@ -243,9 +244,10 @@ public class EventServiceTest {
                 EventStatus.IN_PROGRESS,
                 "lausanne");
         long eventId = 42L;
+
         eventOutputExpected.setEventId(eventId);
 
-        EventDTO eventDTOInputExpected = new EventDTO(
+        EventDTOInput eventDTOInputInputExpected = new EventDTOInput(
                 inputEventExpected.getName(),
                 inputEventExpected.getStartOfEvent(),
                 inputEventExpected.getDuration(),
@@ -253,7 +255,8 @@ public class EventServiceTest {
                 inputEventExpected.getStatus(),
                 inputEventExpected.getLocation());
 
-        EventDTO outputEventDTOExpected = new EventDTO(
+        EventDTOOutput outputEventDTOInputExpected = new EventDTOOutPut(
+                inputEventExpected.
                 inputEventExpected.getName(),
                 inputEventExpected.getStartOfEvent(),
                 inputEventExpected.getDuration(),
@@ -264,17 +267,18 @@ public class EventServiceTest {
 
         when(eventDAO.addEvent(inputEventExpected)).thenReturn(eventOutputExpected);
 
-        when(convertor.convertDTOToEvent(eventDTOInputExpected)).thenReturn(inputEventExpected);
+        when(convertor.convertDTOToEvent(eventDTOInputInputExpected)).thenReturn(inputEventExpected);
 
-        when(convertor.convertEventToDTO(eventOutputExpected)).thenReturn(outputEventDTOExpected);
+        when(convertor.convertEventToDTO(eventOutputExpected)).thenReturn(outputEventDTOInputExpected);
 
         //Action
-        EventDTO eventResult = eventServiceImpl.addEvent(eventDTOInputExpected);
+        EventDTOInput eventResult = eventServiceImpl.addEvent(eventDTOInputInputExpected);
 
         //Assert
-        assertEquals(outputEventDTOExpected, eventResult);
+        assertEquals(outputEventDTOInputExpected, eventResult);
 
-        verify(convertor, times(1)).convertDTOToEvent(eventDTOInputExpected);
+        verify(convertor, times(1)).convertDTOToEvent(eventDTOInputInputExpected);
+
         verify(convertor, times(1)).convertEventToDTO(eventOutputExpected);
 
     }
@@ -294,24 +298,24 @@ public class EventServiceTest {
                 EventStatus.IN_PROGRESS,
                 "Lausanne");
 
-        EventDTO inputEventDTO = new EventDTO( "meeting",
+        EventDTOInput inputEventDTOInput = new EventDTOInput( "meeting",
                 Instant.parse("1980-04-09T10:15:30.00Z"),
                 60,
                 "description of event",
                 EventStatus.IN_PROGRESS,
                 "Lausanne");
 
-        when(eventDAO.eventExistsByBusinessKey(inputEventDTO.getName(),inputEventDTO.getStartOfEvent())).thenReturn(true);
+        when(eventDAO.eventExistsByBusinessKey(inputEventDTOInput.getName(), inputEventDTOInput.getStartOfEvent())).thenReturn(true);
 
         //Action
 
-        AlreadyExistEventException alreadyExistEventExceptionResult = assertThrows(AlreadyExistEventException.class, () -> eventServiceImpl.addEvent(inputEventDTO));
+        AlreadyExistEventException alreadyExistEventExceptionResult = assertThrows(AlreadyExistEventException.class, () -> eventServiceImpl.addEvent(inputEventDTOInput));
 
         //Assert
 
         assertEquals(alreadyExistEventExceptionExpected.getMessage(), alreadyExistEventExceptionResult.getMessage());
         verify(eventDAO, never()).addEvent(inputEvent);
-        verify(eventDAO,times(1)).eventExistsByBusinessKey(inputEventDTO.getName(),inputEventDTO.getStartOfEvent());
+        verify(eventDAO,times(1)).eventExistsByBusinessKey(inputEventDTOInput.getName(), inputEventDTOInput.getStartOfEvent());
 
     }
 }

@@ -1,12 +1,10 @@
-package com.guymontag.eventapi.model.dto;
+package com.guymontag.eventapi.dto;
 
-import com.guymontag.eventapi.exception.EventNullValueException;
-import com.guymontag.eventapi.model.entity.Event;
 import com.guymontag.eventapi.util.EventStatus;
 
 import java.time.Instant;
 
-public class EventDTO {
+public class EventDTOInput {
 
     private String name;
 
@@ -20,7 +18,7 @@ public class EventDTO {
 
     private String location;
 
-    public EventDTO(String name, Instant startOfEvent, int duration, String description, EventStatus status, String location) {
+    public EventDTOInput(String name, Instant startOfEvent, int duration, String description, EventStatus status, String location) {
         this.name = name;
         this.startOfEvent = startOfEvent;
         this.duration = duration;
@@ -77,8 +75,8 @@ public class EventDTO {
         this.location = location;
     }
 
-    public EventDTO copy() {
-        return new EventDTO(
+    public EventDTOInput copy() {
+        return new EventDTOInput(
                 this.getName(),
                 this.getStartOfEvent(),
                 this.getDuration(),

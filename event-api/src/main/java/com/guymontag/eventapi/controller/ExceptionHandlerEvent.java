@@ -1,14 +1,11 @@
 package com.guymontag.eventapi.controller;
 
 import com.guymontag.eventapi.exception.ApiException;
-import com.guymontag.eventapi.exception.EventDTONullValueException;
-import com.guymontag.eventapi.view.response.EventErrorResponse;
+import com.guymontag.eventapi.dto.response.EventErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.security.Timestamp;
 
 @ControllerAdvice
 public class ExceptionHandlerEvent {

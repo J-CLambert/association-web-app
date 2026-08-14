@@ -1,12 +1,14 @@
 package com.guymontag.eventapi.util.validator;
 
-import com.guymontag.eventapi.model.dto.EventDTO;
-import com.guymontag.eventapi.model.entity.Event;
+import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.entity.Event;
+
+import java.util.Optional;
 
 public interface Validator {
     boolean checkFieldsNotNullEvent(Event event);
 
-    boolean checkFieldsNotNullDTO(EventDTO eventDTO);
+    boolean checkFieldsNotNullDTO(EventDTOInput eventDTOInput);
 
-    boolean newEventTimeCheck(EventDTO eventInNow);
+    Optional<EventConstraint> newEventTimeCheck(EventDTOInput eventInNow);
 }

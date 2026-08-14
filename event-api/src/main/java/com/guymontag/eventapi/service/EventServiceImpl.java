@@ -1,17 +1,19 @@
 package com.guymontag.eventapi.service;
 
-import com.guymontag.eventapi.view.dao.EventDAO;
+import com.guymontag.eventapi.dao.EventDAO;
 import com.guymontag.eventapi.exception.*;
-import com.guymontag.eventapi.model.dto.EventDTO;
-import com.guymontag.eventapi.model.entity.Event;
+import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.entity.Event;
 import com.guymontag.eventapi.util.Convertor;
 import com.guymontag.eventapi.util.Page;
+import com.guymontag.eventapi.util.validator.EventConstraint;
+import com.guymontag.eventapi.util.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -21,14 +23,17 @@ public class EventServiceImpl implements EventService {
 
     private final Convertor convertor;
 
+    private final Validator validator;
+
     @Autowired
-    public EventServiceImpl(EventDAO eventDAO, Convertor convertor) {
+    public EventServiceImpl(EventDAO eventDAO, Convertor convertor, Validator validator) {
         this.eventDAO = eventDAO;
         this.convertor = convertor;
+        this.validator = validator;
     }
 
     @Override
-    public EventDTO getEvent(Long eventId) {
+    public EventDTOInput getEvent(Long eventId) {
 
         if (eventId == null) {
             throw new IdValueNullException("EventId has null value");
@@ -44,7 +49,7 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
     @Override
-    public Page<EventDTO> getEventPage(int pageNumber, int maxSize) {
+    public Page<EventDTOInput> getEventPage(int pageNumber, int maxSize) {
 
         if (pageNumber < 0) {
             throw new NegativePageNumberException("PageNumber is negative");
@@ -56,17 +61,31 @@ public class EventServiceImpl implements EventService {
 
         Long totalEvent = eventDAO.getNumberOfEvent();
 
-        List<EventDTO> eventDTOs = convertor.convertEventsToDTOs(
+        List<EventDTOInput> eventDTOInputs = convertor.convertEventsToDTOs(
                 eventDAO.getEventPage(pageNumber, maxSize));
 
-        Page<EventDTO> eventDTOPage = new Page<>(eventDTOs, pageNumber, maxSize, totalEvent);
+        Page<EventDTOInput> eventDTOPage = new Page<>(eventDTOInputs, pageNumber, maxSize, totalEvent);
 
         return eventDTOPage;
     }
 
     @Transactional
     @Override
-    public EventDTO addEvent(EventDTO inputEventDTO) {
-        return null;
+    public EventDTOInput addEvent(EventDTOInput inputEventDTOInput) {
+        Optional<EventConstraint> conditionOfRejetPassed = validator.newEventTimeCheck(inputEventDTOInput);
+
+        if (conditionOfRejetPassed.isPresent()) {
+            throw conditionOfRejetPassed.get().exception().get();
+        }
+
+        if (eventDAO.eventExistsByBusinessKey(inputEventDTOInput.getName(), inputEventDTOInput.getStartOfEvent())) {
+            throw new AlreadyExistEventException("Event already exist");
+        }
+
+        Event inputEvent = convertor.convertDTOToEvent(inputEventDTOInput);
+
+        eventDAO.addEvent(inputEvent);
+
+        return inputEventDTOInput;
     }
 }

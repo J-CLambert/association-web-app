@@ -1,7 +1,6 @@
-package com.guymontag.eventapi.view.dao;
+package com.guymontag.eventapi.dao;
 
-import com.guymontag.eventapi.model.entity.Event;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import com.guymontag.eventapi.entity.Event;
 
 import java.time.Instant;
 import java.util.List;
@@ -15,7 +14,7 @@ public interface EventDAO {
 
     Long getNumberOfEvent();
 
-    Object eventExistsByBusinessKey(String name, Instant startOfEvent);
+    boolean eventExistsByBusinessKey(String name, Instant startOfEvent);
 
     Event addEvent(Event inputEvent);
 }

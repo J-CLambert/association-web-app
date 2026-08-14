@@ -1,6 +1,6 @@
 package com.guymontag.eventapi.controller;
 
-import com.guymontag.eventapi.model.dto.EventDTO;
+import com.guymontag.eventapi.dto.EventDTOInput;
 import com.guymontag.eventapi.service.EventService;
 import com.guymontag.eventapi.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +18,16 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}")
-    public EventDTO getEvent(@PathVariable Long eventId) {
+    public EventDTOInput getEvent(@PathVariable Long eventId) {
         return eventService.getEvent(eventId);
     }
 
     @GetMapping
-    public Page<EventDTO> getEventPage(
+    public Page<EventDTOInput> getEventPage(
             @RequestParam(name = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(name = "maxSize", required = false, defaultValue = "5") int maxSize
     ) {
-        Page<EventDTO> eventDTOPage = eventService.getEventPage(pageNumber, maxSize);
+        Page<EventDTOInput> eventDTOPage = eventService.getEventPage(pageNumber, maxSize);
         return eventDTOPage;
     }
 }

@@ -1,4 +1,4 @@
-package com.guymontag.eventapi.model.entity;
+package com.guymontag.eventapi.entity;
 
 
 import com.guymontag.eventapi.util.EventStatus;

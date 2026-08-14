@@ -2,17 +2,14 @@ package com.guymontag.eventapi.util.validator;
 
 import com.guymontag.eventapi.exception.EventDTONullValueException;
 import com.guymontag.eventapi.exception.EventNullValueException;
-import com.guymontag.eventapi.model.dto.EventDTO;
-import com.guymontag.eventapi.model.entity.Event;
-import com.guymontag.eventapi.util.EventStatus;
+import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.entity.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
-import java.time.Instant;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 @Component
 @Lazy
@@ -45,24 +42,24 @@ public class ValidatorImpl implements Validator {
     }
 
 
-    public boolean checkFieldsNotNullDTO(EventDTO eventDTO) {
+    public boolean checkFieldsNotNullDTO(EventDTOInput eventDTOInput) {
 
-        if (eventDTO == null) {
+        if (eventDTOInput == null) {
             throw new EventDTONullValueException("EventDTO is null");
         }
 
-        boolean nameIsNotNull = eventDTO.getName() != null;
-        boolean startOfEventIsNotNull = eventDTO.getStartOfEvent() != null;
-        boolean descriptionIsNotNull = eventDTO.getDescription() != null;
-        boolean statusIsNotNull = eventDTO.getStatus() != null;
-        boolean locationIsNotNull = eventDTO.getLocation() != null;
+        boolean nameIsNotNull = eventDTOInput.getName() != null;
+        boolean startOfEventIsNotNull = eventDTOInput.getStartOfEvent() != null;
+        boolean descriptionIsNotNull = eventDTOInput.getDescription() != null;
+        boolean statusIsNotNull = eventDTOInput.getStatus() != null;
+        boolean locationIsNotNull = eventDTOInput.getLocation() != null;
 
         return nameIsNotNull && startOfEventIsNotNull && descriptionIsNotNull && statusIsNotNull && locationIsNotNull;
     }
 
     @Override
-    public boolean newEventTimeCheck(EventDTO eventInNow) {
+    public Optional<EventConstraint> newEventTimeCheck(EventDTOInput eventInNow) {
         return constraintsValidEvent.constraints.stream()
-                .anyMatch(rejectConditions -> rejectConditions.rule().test(eventInNow));
+                .filter(rejectConditions -> rejectConditions.rule().test(eventInNow)).findFirst();
     }
 }

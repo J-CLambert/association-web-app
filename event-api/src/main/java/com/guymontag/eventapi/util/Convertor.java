@@ -2,12 +2,10 @@ package com.guymontag.eventapi.util;
 
 import com.guymontag.eventapi.exception.EventDTOListNullValueException;
 import com.guymontag.eventapi.exception.EventListNullValueException;
-import com.guymontag.eventapi.exception.EventNullValueException;
-import com.guymontag.eventapi.model.dto.EventDTO;
-import com.guymontag.eventapi.model.entity.Event;
+import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.entity.Event;
 import com.guymontag.eventapi.util.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,16 +24,16 @@ public class Convertor {
 
 
     // EventDTO to Event
-    public Event convertDTOToEvent(EventDTO eventDTO) {
+    public Event convertDTOToEvent(EventDTOInput eventDTOInput) {
 
-        if (validatorImpl.checkFieldsNotNullDTO(eventDTO)) {
+        if (validatorImpl.checkFieldsNotNullDTO(eventDTOInput)) {
             return new Event(
-                    eventDTO.getName(),
-                    eventDTO.getStartOfEvent(),
-                    eventDTO.getDuration(),
-                    eventDTO.getDescription(),
-                    eventDTO.getStatus(),
-                    eventDTO.getLocation()
+                    eventDTOInput.getName(),
+                    eventDTOInput.getStartOfEvent(),
+                    eventDTOInput.getDuration(),
+                    eventDTOInput.getDescription(),
+                    eventDTOInput.getStatus(),
+                    eventDTOInput.getLocation()
             );
         } else {
             return null;
@@ -43,20 +41,20 @@ public class Convertor {
     }
 
 
-    public List<Event> convertDTOsToEvents(List<EventDTO> eventDTOs) {
+    public List<Event> convertDTOsToEvents(List<EventDTOInput> eventDTOInputs) {
 
-        if (eventDTOs == null) {
+        if (eventDTOInputs == null) {
             throw new EventDTOListNullValueException("list is null");
         }
 
-        return eventDTOs.stream().map(eventDTO -> convertDTOToEvent(eventDTO)).toList();
+        return eventDTOInputs.stream().map(eventDTO -> convertDTOToEvent(eventDTO)).toList();
     }
 
 
     //Event to EventDTO
-    public EventDTO convertEventToDTO(Event event) {
+    public EventDTOInput convertEventToDTO(Event event) {
         if (validatorImpl.checkFieldsNotNullEvent(event)) {
-            return new EventDTO(
+            return new EventDTOInput(
                     event.getName(),
                     event.getStartOfEvent(),
                     event.getDuration(),
@@ -70,8 +68,8 @@ public class Convertor {
     }
 
 
-    public List<EventDTO> convertEventsToDTOs(List<Event> events) {
-        List<EventDTO> eventDTOs = new ArrayList<EventDTO>();
+    public List<EventDTOInput> convertEventsToDTOs(List<Event> events) {
+        List<EventDTOInput> eventDTOInputs = new ArrayList<EventDTOInput>();
         if (events == null) {
             throw new EventListNullValueException("list is null");
         }

@@ -4,10 +4,11 @@ import com.guymontag.eventapi.exception.EventDTONullValueException;
 import com.guymontag.eventapi.exception.EventNullValueException;
 import com.guymontag.eventapi.exception.FuturEventCompletedException;
 import com.guymontag.eventapi.exception.PastEventPlannedException;
-import com.guymontag.eventapi.model.dto.EventDTO;
-import com.guymontag.eventapi.model.entity.Event;
+import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.entity.Event;
 import com.guymontag.eventapi.util.EventStatus;
 import com.guymontag.eventapi.util.validator.ConstraintsValidEvent;
+import com.guymontag.eventapi.util.validator.EventConstraint;
 import com.guymontag.eventapi.util.validator.ValidatorImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,8 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,9 +47,9 @@ public class ValidatorImplTest {
         assertFalse(result);
     }
 
-    static Stream<EventDTO> eventDTOWithNullField() {
+    static Stream<EventDTOInput> eventDTOWithNullField() {
 
-        EventDTO exempleOfEventDTO = new EventDTO(
+        EventDTOInput exempleOfEventDTOInput = new EventDTOInput(
                 "meeting",
                 Instant.parse("2020-01-01T00:10:00.00Z"),
                 60,
@@ -57,31 +57,31 @@ public class ValidatorImplTest {
                 EventStatus.IN_PROGRESS,
                 "Lausanne");
 
-        EventDTO eventDTONullStartOfEvent = exempleOfEventDTO.copy();
-        eventDTONullStartOfEvent.setStartOfEvent(null);
+        EventDTOInput eventDTONullStartOfEventInput = exempleOfEventDTOInput.copy();
+        eventDTONullStartOfEventInput.setStartOfEvent(null);
 
-        EventDTO eventDTONullDescription = exempleOfEventDTO.copy();
-        eventDTONullDescription.setDescription(null);
+        EventDTOInput eventDTOInputNullDescription = exempleOfEventDTOInput.copy();
+        eventDTOInputNullDescription.setDescription(null);
 
-        EventDTO eventDTONullStatus = exempleOfEventDTO.copy();
-        eventDTONullStatus.setStatus(null);
+        EventDTOInput eventDTOInputNullStatus = exempleOfEventDTOInput.copy();
+        eventDTOInputNullStatus.setStatus(null);
 
-        EventDTO eventDTONullLocation = exempleOfEventDTO.copy();
-        eventDTONullLocation.setLocation(null);
+        EventDTOInput eventDTOInputNullLocation = exempleOfEventDTOInput.copy();
+        eventDTOInputNullLocation.setLocation(null);
 
-        EventDTO eventDTONullName = exempleOfEventDTO.copy();
-        eventDTONullName.setName(null);
+        EventDTOInput eventDTOInputNullName = exempleOfEventDTOInput.copy();
+        eventDTOInputNullName.setName(null);
 
-        return Stream.of(eventDTONullName, eventDTONullDescription, eventDTONullLocation, eventDTONullStatus, eventDTONullStartOfEvent);
+        return Stream.of(eventDTOInputNullName, eventDTOInputNullDescription, eventDTOInputNullLocation, eventDTOInputNullStatus, eventDTONullStartOfEventInput);
     }
 
     @ParameterizedTest
     @MethodSource("eventDTOWithNullField")
-    void shouldReturnFalseWhenDTOFieldIsNull(EventDTO eventDTO) {
+    void shouldReturnFalseWhenDTOFieldIsNull(EventDTOInput eventDTOInput) {
         // Arrange
 
         //Action
-        boolean result = validator.checkFieldsNotNullDTO(eventDTO);
+        boolean result = validator.checkFieldsNotNullDTO(eventDTOInput);
 
         //Assert
         assertFalse(result);
@@ -106,13 +106,13 @@ public class ValidatorImplTest {
     @Test
     void shouldThrowExceptionWhenDTOIsNull() {
         //Arrange
-        EventDTO nullEventDTO = null;
+        EventDTOInput nullEventDTOInput = null;
 
         EventDTONullValueException eventDTONullValueExceptionExcepted = new EventDTONullValueException("EventDTO is null");
 
         //Action
         EventDTONullValueException eventDTONullValueExceptionResult =
-                assertThrows(EventDTONullValueException.class, () -> validator.checkFieldsNotNullDTO(nullEventDTO));
+                assertThrows(EventDTONullValueException.class, () -> validator.checkFieldsNotNullDTO(nullEventDTOInput));
 
         //Assert
         assertEquals(eventDTONullValueExceptionExcepted.getMessage(), eventDTONullValueExceptionResult.getMessage());
@@ -122,7 +122,7 @@ public class ValidatorImplTest {
     @Test
     void shouldThrowExceptionWhenEventIsInThePastAndPlanned() {
         //Arrange
-        EventDTO eventInPast = new EventDTO(
+        EventDTOInput eventInPast = new EventDTOInput(
                 "meting",
                 Instant.parse("1999-01-01T00:00:00.00Z"),
                 60,
@@ -145,7 +145,7 @@ public class ValidatorImplTest {
     @Test
     void shouldThrowExceptionWhenEventIsInNearPastAndPlanned() {
         //Arrange
-        EventDTO eventInPast = new EventDTO(
+        EventDTOInput eventInPast = new EventDTOInput(
                 "meting",
                 Instant.parse("2020-01-01T00:10:00.00Z").minusNanos(1),
                 60,
@@ -166,9 +166,9 @@ public class ValidatorImplTest {
 
 
     @Test
-    void shouldReturnTrueWhenEventIsInThePassAndCompleted() {
+    void shouldPastValidationWhenEventIsInThePassAndCompleted() {
         //Arrange
-        EventDTO eventInPast = new EventDTO(
+        EventDTOInput eventInPast = new EventDTOInput(
                 "meting",
                 Instant.parse("1999-01-01T00:00:00.00Z"),
                 60,
@@ -177,16 +177,16 @@ public class ValidatorImplTest {
                 null);
 
         //Action
-        boolean newEventIsValidResult = validator.newEventTimeCheck(eventInPast);
+        Optional<EventConstraint> rejectedCondition = validator.newEventTimeCheck(eventInPast);
 
         //Assert
-        assertTrue(newEventIsValidResult);
+        assertTrue(rejectedCondition.isEmpty());
     }
 
     @Test
     void shouldThrowExceptionWhenEventIsInFutureAndCompleted() {
         //Arrange
-        EventDTO eventInFuture = new EventDTO(
+        EventDTOInput eventInFuture = new EventDTOInput(
                 "meting",
                 Instant.parse("2050-01-01T00:00:00.00Z"),
                 60,
@@ -207,9 +207,9 @@ public class ValidatorImplTest {
     }
 
     @Test
-    void shouldReturnTrueWhenEventIsInFuturAndPlanned() {
+    void shouldPastValidationWhenEventIsInFuturAndPlanned() {
         //Arrange
-        EventDTO eventInFuture = new EventDTO(
+        EventDTOInput eventInFuture = new EventDTOInput(
                 "meting",
                 Instant.parse("2050-01-01T00:00:00.00Z"),
                 60,
@@ -218,16 +218,16 @@ public class ValidatorImplTest {
                 null);
 
         //Action
-        boolean newEventIsValidResult = validator.newEventTimeCheck(eventInFuture);
+        Optional<EventConstraint> rejectedCondition = validator.newEventTimeCheck(eventInFuture);
 
         //Assert
-        assertTrue(newEventIsValidResult);
+        assertTrue(rejectedCondition.isEmpty());
     }
 
     @Test
-    void shouldReturnTrueWhenEventIsNowAndIsPlanned() {
+    void shouldPastValidationWhenEventIsNowAndIsPlanned() {
         //Arrange
-        EventDTO eventInNow = new EventDTO(
+        EventDTOInput eventInNow = new EventDTOInput(
                 "meting",
                 // the date
                 Instant.parse("2020-01-01T00:10:00.00Z"),
@@ -238,10 +238,10 @@ public class ValidatorImplTest {
 
 
         //Action
-        boolean newEventIsValidResult = validator.newEventTimeCheck(eventInNow);
+        Optional<EventConstraint> rejectedCondition = validator.newEventTimeCheck(eventInNow);
 
         //Assert
-        assertTrue(newEventIsValidResult);
+        assertTrue(rejectedCondition.isEmpty());
     }
 
 }
