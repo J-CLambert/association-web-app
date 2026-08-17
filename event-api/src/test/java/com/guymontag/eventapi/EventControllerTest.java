@@ -2,7 +2,7 @@ package com.guymontag.eventapi;
 
 import com.guymontag.eventapi.controller.EventController;
 import com.guymontag.eventapi.exception.EventNotFoundException;
-import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.service.EventService;
 import com.guymontag.eventapi.util.EventStatus;
 import org.junit.jupiter.api.Test;

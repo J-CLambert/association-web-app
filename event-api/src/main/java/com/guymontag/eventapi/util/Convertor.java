@@ -2,7 +2,7 @@ package com.guymontag.eventapi.util;
 
 import com.guymontag.eventapi.exception.EventDTOListNullValueException;
 import com.guymontag.eventapi.exception.EventListNullValueException;
-import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.entity.Event;
 import com.guymontag.eventapi.util.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,16 @@ public class Convertor {
 
 
     //Event to EventDTO
-    public EventDTOInput convertEventToDTO(Event event) {
+    public EventDTOInput convertEventToDTO(Event event, DTOType dtoType) {
+        if(validatorImpl.checkFieldsNotNullEvent(event)){
+            if(dtoType == DTOType.INPUT){
+
+            }else{
+
+            }
+
+        }
+
         if (validatorImpl.checkFieldsNotNullEvent(event)) {
             return new EventDTOInput(
                     event.getName(),

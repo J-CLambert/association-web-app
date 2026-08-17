@@ -1,6 +1,6 @@
 package com.guymontag.eventapi.util.validator;
 
-import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.entity.Event;
 
 import java.util.Optional;

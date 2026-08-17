@@ -2,7 +2,7 @@ package com.guymontag.eventapi.service;
 
 import com.guymontag.eventapi.dao.EventDAO;
 import com.guymontag.eventapi.exception.*;
-import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.entity.Event;
 import com.guymontag.eventapi.util.Convertor;
 import com.guymontag.eventapi.util.Page;

@@ -1,6 +1,6 @@
 package com.guymontag.eventapi.service;
 
-import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.util.Page;
 
 public interface EventService {

@@ -4,7 +4,7 @@ import com.guymontag.eventapi.exception.EventDTONullValueException;
 import com.guymontag.eventapi.exception.EventNullValueException;
 import com.guymontag.eventapi.exception.FuturEventCompletedException;
 import com.guymontag.eventapi.exception.PastEventPlannedException;
-import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.entity.Event;
 import com.guymontag.eventapi.util.EventStatus;
 import com.guymontag.eventapi.util.validator.ConstraintsValidEvent;

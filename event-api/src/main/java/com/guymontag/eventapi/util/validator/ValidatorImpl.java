@@ -2,7 +2,7 @@ package com.guymontag.eventapi.util.validator;
 
 import com.guymontag.eventapi.exception.EventDTONullValueException;
 import com.guymontag.eventapi.exception.EventNullValueException;
-import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.entity.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;

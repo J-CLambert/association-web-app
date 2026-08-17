@@ -1,6 +1,6 @@
 package com.guymontag.eventapi.controller;
 
-import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.service.EventService;
 import com.guymontag.eventapi.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;

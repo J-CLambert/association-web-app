@@ -1,7 +1,7 @@
 package com.guymontag.eventapi.util.validator;
 
 import com.guymontag.eventapi.exception.ApiException;
-import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.dto.response.EventDTOInput;
 
 import java.util.function.Predicate;
 import java.util.function.Supplier;

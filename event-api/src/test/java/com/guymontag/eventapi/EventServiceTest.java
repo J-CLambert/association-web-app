@@ -1,9 +1,9 @@
 package com.guymontag.eventapi;
 
 import com.guymontag.eventapi.dao.EventDAO;
-import com.guymontag.eventapi.dto.response.EventDTOOutput;
+import com.guymontag.eventapi.dto.response.EventDTOOutPut;
 import com.guymontag.eventapi.exception.*;
-import com.guymontag.eventapi.dto.EventDTOInput;
+import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.entity.Event;
 import com.guymontag.eventapi.service.EventServiceImpl;
 import com.guymontag.eventapi.util.Convertor;
@@ -243,8 +243,10 @@ public class EventServiceTest {
                 "description of event",
                 EventStatus.IN_PROGRESS,
                 "lausanne");
+
         long eventId = 42L;
 
+        inputEventExpected.setEventId(eventId);
         eventOutputExpected.setEventId(eventId);
 
         EventDTOInput eventDTOInputInputExpected = new EventDTOInput(
@@ -255,8 +257,8 @@ public class EventServiceTest {
                 inputEventExpected.getStatus(),
                 inputEventExpected.getLocation());
 
-        EventDTOOutput outputEventDTOInputExpected = new EventDTOOutPut(
-                inputEventExpected.
+        EventDTOOutPut outputEventDTOInputExpected = new EventDTOOutPut(
+                inputEventExpected.getEventId(),
                 inputEventExpected.getName(),
                 inputEventExpected.getStartOfEvent(),
                 inputEventExpected.getDuration(),

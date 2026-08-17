@@ -1,10 +1,12 @@
-package com.guymontag.eventapi.dto;
+package com.guymontag.eventapi.dto.response;
 
 import com.guymontag.eventapi.util.EventStatus;
 
 import java.time.Instant;
 
-public class EventDTOInput {
+public class EventDTOOutPut implements EventDTO {
+
+    private Long id;
 
     private String name;
 
@@ -18,13 +20,18 @@ public class EventDTOInput {
 
     private String location;
 
-    public EventDTOInput(String name, Instant startOfEvent, int duration, String description, EventStatus status, String location) {
+    public EventDTOOutPut(Long id, String name, Instant startOfEvent, int duration, String description, EventStatus status, String location) {
+        this.id = id;
         this.name = name;
         this.startOfEvent = startOfEvent;
         this.duration = duration;
         this.description = description;
         this.status = status;
         this.location = location;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -75,8 +82,9 @@ public class EventDTOInput {
         this.location = location;
     }
 
-    public EventDTOInput copy() {
-        return new EventDTOInput(
+    public EventDTO copy() {
+        return new EventDTOOutPut(
+                this.getId(),
                 this.getName(),
                 this.getStartOfEvent(),
                 this.getDuration(),
