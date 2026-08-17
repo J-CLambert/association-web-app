@@ -1,10 +1,12 @@
 package com.guymontag.eventapi.service;
 
 import com.guymontag.eventapi.dao.EventDAO;
+import com.guymontag.eventapi.dto.response.EventDTO;
 import com.guymontag.eventapi.exception.*;
 import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.entity.Event;
 import com.guymontag.eventapi.util.Convertor;
+import com.guymontag.eventapi.util.DTOType;
 import com.guymontag.eventapi.util.Page;
 import com.guymontag.eventapi.util.validator.EventConstraint;
 import com.guymontag.eventapi.util.validator.Validator;
@@ -33,7 +35,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDTOInput getEvent(Long eventId) {
+    public EventDTO getEvent(Long eventId) {
 
         if (eventId == null) {
             throw new IdValueNullException("EventId has null value");
@@ -44,12 +46,12 @@ public class EventServiceImpl implements EventService {
         }
         Event evntFound = eventDAO.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found"));
-        return convertor.convertEventToDTO(evntFound);
+        return convertor.convertEventToDTO(evntFound,DTOType.INPUT);
     }
 
     @Transactional
     @Override
-    public Page<EventDTOInput> getEventPage(int pageNumber, int maxSize) {
+    public Page<EventDTO> getEventPage(int pageNumber, int maxSize) {
 
         if (pageNumber < 0) {
             throw new NegativePageNumberException("PageNumber is negative");
@@ -61,10 +63,10 @@ public class EventServiceImpl implements EventService {
 
         Long totalEvent = eventDAO.getNumberOfEvent();
 
-        List<EventDTOInput> eventDTOInputs = convertor.convertEventsToDTOs(
-                eventDAO.getEventPage(pageNumber, maxSize));
+        List<EventDTO> eventDTOInputs = convertor.convertEventsToDTOs(
+                eventDAO.getEventPage(pageNumber, maxSize), DTOType.INPUT);
 
-        Page<EventDTOInput> eventDTOPage = new Page<>(eventDTOInputs, pageNumber, maxSize, totalEvent);
+        Page<EventDTO> eventDTOPage = new Page<>(eventDTOInputs, pageNumber, maxSize, totalEvent);
 
         return eventDTOPage;
     }

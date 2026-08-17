@@ -1,5 +1,6 @@
 package com.guymontag.eventapi.util.validator;
 
+import com.guymontag.eventapi.dto.response.EventDTO;
 import com.guymontag.eventapi.exception.EventDTONullValueException;
 import com.guymontag.eventapi.exception.EventNullValueException;
 import com.guymontag.eventapi.dto.response.EventDTOInput;
@@ -42,7 +43,7 @@ public class ValidatorImpl implements Validator {
     }
 
 
-    public boolean checkFieldsNotNullDTO(EventDTOInput eventDTOInput) {
+    public boolean checkFieldsNotNullDTO(EventDTO eventDTOInput) {
 
         if (eventDTOInput == null) {
             throw new EventDTONullValueException("EventDTO is null");

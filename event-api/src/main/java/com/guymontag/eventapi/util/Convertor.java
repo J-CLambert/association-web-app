@@ -1,5 +1,7 @@
 package com.guymontag.eventapi.util;
 
+import com.guymontag.eventapi.dto.response.EventDTO;
+import com.guymontag.eventapi.dto.response.EventDTOOutPut;
 import com.guymontag.eventapi.exception.EventDTOListNullValueException;
 import com.guymontag.eventapi.exception.EventListNullValueException;
 import com.guymontag.eventapi.dto.response.EventDTOInput;
@@ -24,16 +26,16 @@ public class Convertor {
 
 
     // EventDTO to Event
-    public Event convertDTOToEvent(EventDTOInput eventDTOInput) {
+    public Event convertDTOToEvent(EventDTO eventDTO) {
 
-        if (validatorImpl.checkFieldsNotNullDTO(eventDTOInput)) {
+        if (validatorImpl.checkFieldsNotNullDTO(eventDTO)) {
             return new Event(
-                    eventDTOInput.getName(),
-                    eventDTOInput.getStartOfEvent(),
-                    eventDTOInput.getDuration(),
-                    eventDTOInput.getDescription(),
-                    eventDTOInput.getStatus(),
-                    eventDTOInput.getLocation()
+                    eventDTO.getName(),
+                    eventDTO.getStartOfEvent(),
+                    eventDTO.getDuration(),
+                    eventDTO.getDescription(),
+                    eventDTO.getStatus(),
+                    eventDTO.getLocation()
             );
         } else {
             return null;
@@ -52,12 +54,25 @@ public class Convertor {
 
 
     //Event to EventDTO
-    public EventDTOInput convertEventToDTO(Event event, DTOType dtoType) {
-        if(validatorImpl.checkFieldsNotNullEvent(event)){
-            if(dtoType == DTOType.INPUT){
-
-            }else{
-
+    public EventDTO convertEventToDTO(Event event, DTOType dtoType) {
+        if (validatorImpl.checkFieldsNotNullEvent(event)) {
+            if (dtoType == DTOType.INPUT) {
+                return new EventDTOInput(
+                        event.getName(),
+                        event.getStartOfEvent(),
+                        event.getDuration(),
+                        event.getDescription(),
+                        event.getStatus(),
+                        event.getLocation());
+            } else {
+                return new EventDTOOutPut(
+                        event.getEventId(),
+                        event.getName(),
+                        event.getStartOfEvent(),
+                        event.getDuration(),
+                        event.getDescription(),
+                        event.getStatus(),
+                        event.getLocation());
             }
 
         }
@@ -77,12 +92,16 @@ public class Convertor {
     }
 
 
-    public List<EventDTOInput> convertEventsToDTOs(List<Event> events) {
-        List<EventDTOInput> eventDTOInputs = new ArrayList<EventDTOInput>();
+    public List<EventDTO> convertEventsToDTOs(List<Event> events, DTOType dtoType) {
+        List<EventDTO> eventDTO = new ArrayList<EventDTO>();
         if (events == null) {
             throw new EventListNullValueException("list is null");
         }
+        if (dtoType == DTOType.OUTPUT) {
+            return events.stream().map(event -> convertEventToDTO(event, DTOType.OUTPUT)).toList();
 
-        return events.stream().map(event -> convertEventToDTO(event)).toList();
+        } else {
+            return events.stream().map(event -> convertEventToDTO(event, DTOType.INPUT)).toList();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.guymontag.eventapi;
 
+import com.guymontag.eventapi.dto.response.EventDTO;
 import com.guymontag.eventapi.exception.EventDTONullValueException;
 import com.guymontag.eventapi.exception.EventNullValueException;
 import com.guymontag.eventapi.exception.FuturEventCompletedException;
@@ -47,7 +48,7 @@ public class ValidatorImplTest {
         assertFalse(result);
     }
 
-    static Stream<EventDTOInput> eventDTOWithNullField() {
+    static Stream<EventDTO> eventDTOWithNullField() {
 
         EventDTOInput exempleOfEventDTOInput = new EventDTOInput(
                 "meeting",
@@ -57,19 +58,19 @@ public class ValidatorImplTest {
                 EventStatus.IN_PROGRESS,
                 "Lausanne");
 
-        EventDTOInput eventDTONullStartOfEventInput = exempleOfEventDTOInput.copy();
+        EventDTO eventDTONullStartOfEventInput = exempleOfEventDTOInput.copy();
         eventDTONullStartOfEventInput.setStartOfEvent(null);
 
-        EventDTOInput eventDTOInputNullDescription = exempleOfEventDTOInput.copy();
+        EventDTO eventDTOInputNullDescription = exempleOfEventDTOInput.copy();
         eventDTOInputNullDescription.setDescription(null);
 
-        EventDTOInput eventDTOInputNullStatus = exempleOfEventDTOInput.copy();
+        EventDTO eventDTOInputNullStatus = exempleOfEventDTOInput.copy();
         eventDTOInputNullStatus.setStatus(null);
 
-        EventDTOInput eventDTOInputNullLocation = exempleOfEventDTOInput.copy();
+        EventDTO eventDTOInputNullLocation = exempleOfEventDTOInput.copy();
         eventDTOInputNullLocation.setLocation(null);
 
-        EventDTOInput eventDTOInputNullName = exempleOfEventDTOInput.copy();
+        EventDTO eventDTOInputNullName = exempleOfEventDTOInput.copy();
         eventDTOInputNullName.setName(null);
 
         return Stream.of(eventDTOInputNullName, eventDTOInputNullDescription, eventDTOInputNullLocation, eventDTOInputNullStatus, eventDTONullStartOfEventInput);
@@ -77,7 +78,7 @@ public class ValidatorImplTest {
 
     @ParameterizedTest
     @MethodSource("eventDTOWithNullField")
-    void shouldReturnFalseWhenDTOFieldIsNull(EventDTOInput eventDTOInput) {
+    void shouldReturnFalseWhenDTOFieldIsNull(EventDTO eventDTOInput) {
         // Arrange
 
         //Action

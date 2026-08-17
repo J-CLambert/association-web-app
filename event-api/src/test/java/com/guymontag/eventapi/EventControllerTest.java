@@ -1,6 +1,7 @@
 package com.guymontag.eventapi;
 
 import com.guymontag.eventapi.controller.EventController;
+import com.guymontag.eventapi.dto.response.EventDTO;
 import com.guymontag.eventapi.exception.EventNotFoundException;
 import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.service.EventService;
@@ -67,7 +68,7 @@ public class EventControllerTest {
 
         //Action
 
-        EventDTOInput eventDTOInputResult = eventService.getEvent(existingEventId);
+        EventDTO eventDTOInputResult = eventService.getEvent(existingEventId);
 
         //Assert
         assertEquals(eventDTOInputExcepted, eventDTOInputResult);

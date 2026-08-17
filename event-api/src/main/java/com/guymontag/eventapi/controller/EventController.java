@@ -1,5 +1,6 @@
 package com.guymontag.eventapi.controller;
 
+import com.guymontag.eventapi.dto.response.EventDTO;
 import com.guymontag.eventapi.dto.response.EventDTOInput;
 import com.guymontag.eventapi.service.EventService;
 import com.guymontag.eventapi.util.Page;
@@ -18,16 +19,16 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}")
-    public EventDTOInput getEvent(@PathVariable Long eventId) {
+    public EventDTO getEvent(@PathVariable Long eventId) {
         return eventService.getEvent(eventId);
     }
 
     @GetMapping
-    public Page<EventDTOInput> getEventPage(
+    public Page<EventDTO> getEventPage(
             @RequestParam(name = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(name = "maxSize", required = false, defaultValue = "5") int maxSize
     ) {
-        Page<EventDTOInput> eventDTOPage = eventService.getEventPage(pageNumber, maxSize);
+        Page<EventDTO> eventDTOPage = eventService.getEventPage(pageNumber, maxSize);
         return eventDTOPage;
     }
 }
